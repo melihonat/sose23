@@ -1,0 +1,165 @@
+body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .background {
+    background-image: url('background.jpg');
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .container {
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 800px;
+    padding: 20px;
+    font-family: Arial, Italic;
+    border-radius: 7px;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .header img {
+    width: 100px;
+    margin-right: 10px;
+  }
+  
+  .tab ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .tab ul li {
+    padding: 10px;
+    background-color: #F0F0F0;
+    cursor: pointer;
+    font-family: 'Chelsea Market', cursive;
+    border-radius: 7px 7px 0 0;
+  }
+  
+  .tab ul li.active {
+    background-color: #DA3846;
+    color: white;
+  }
+  
+  .content {
+    margin-top: 20px;
+  }
+  
+  .card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+    text-align: center;
+    width: 200px;
+    border-radius: 7px;
+  }
+  
+  .special-card {
+    background-color: #f9f9f9;
+  }
+  
+  .card img {
+    max-width: 100%;
+    max-height: 150px;
+    object-fit: contain;
+  }
+  
+  .card p {
+    margin-top: 10px;
+    font-family: 'Chelsea Market', cursive;
+  }
+  
+  .card input[type="text"],
+  .card input[type="file"] {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .level {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    margin-top: 10px;
+  }
+  
+  .scrollable-content {
+    height: 350px;
+    overflow-y: auto;
+  }
+  
+  .fancy-heading {
+    font-family: 'Chelsea Market', cursive;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 10px;
+    border-radius: 7px;
+  }
+  
+  .cards-content {
+    height: 350px;
+    overflow-y: auto;
+  }
+  
+  .cards-content .card:first-child {
+    margin-top: 0;
+  }
+  
+  .cards-content .empty-card {
+    position: fixed;
+    top: 100px;
+    left: 20px;
+  }
+  
+  .level {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .level input[type="text"] {
+    width: 95%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .level label {
+    font-weight: bold;
+  }
+  
+  .level input[type="text"]:focus {
+    outline: none;
+    border-color: #afafaf;
+  }
+  
+  #add-level {
+    background-color: #da3846;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  #add-level:hover {
+    background-color: #c72c3b;
+  }
+  
+  #add-level:focus {
+    outline: none;
+  }
