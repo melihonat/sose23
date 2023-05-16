@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap');
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="header">
+      <img src="logo.png" alt="Logo" id="logo">
+      <h1>Admin Panel</h1>
+    </div>
+    <div id="tabs">
+      <ul>
+        <li><a href="#spieler" class="tab-link active" onclick="changeTab(event)">Spieler</a></li>
+        <li><a href="#karte" class="tab-link" onclick="changeTab(event)">Karte</a></li>
+        <li><a href="#level" class="tab-link" onclick="changeTab(event)">Level</a></li>
+        <li><a href="#spiel" class="tab-link" onclick="changeTab(event)">Spiele</a></li>
+      </ul>
+      <div id="spieler" class="tab-content">
+        <h2>Spieler</h2>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Vorname</th>
+            <th>E-Mail</th>
+            <th>Spiellevel</th>
+          </tr>
+          <tr>
+            <td>Dontax</td>
+            <td>Melih</td>
+            <td>mdontax@web.de</td>
+            <td>31</td>
+          </tr>
+          <tr>
+            <td>Hülsenfrüchtel</td>
+            <td>Kai</td>
+            <td>kajhüls@hotmail.com</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>Sakayolo</td>
+            <td>Mert</td>
+            <td>mertsa@web.de</td>
+            <td>80</td>
+          </tr>
+        </table>
+      </div>
+      <div id="karte" class="tab-content">
+        <h2>Karte</h2>
+        <div class="card">
+          <img src="card1.jpg" alt="Card 1">
+          <p>Karte Hexe</p>
+        </div>
+        <div class="card">
+          <img src="card2.jpg" alt="Card 2">
+          <p>Karte Hund</p>
+        </div>
+        <div class="card">
+          <img src="card3.jpg" alt="Card 3">
+          <p>Karte Mensch</p>
+        </div>
+      </div>
+      <div id="level" class="tab-content">
+        <h2>Level</h2>
+        <table>
+          <tr>
+            <th>Nummer</th>
+            <th>Spielzeit</th>
+            <th>Anzahl der Karten</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>4</td>
+            <td>12</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>5</td>
+            <td>24</td>
+          </tr>
+        </table>
+      </div>
+      <div id="spiel" class="tab-content">
+        <h2>Spiele</h2>
+        <table>
+          <tr>
+            <th>Spieldatum</th>
+            <th>Level</th>
+            <th>Spieldauer</th>
+            <th>Spielart</th>
+            <th>Spielername(n)</th>
+            <th>Gewinner</th>
+            <th>Verlauf</th>
+          </tr>
+          <tr>
+            <td>20.01.2023</td>
+            <td>1</td>
+            <td>01:24</td>
+            <td>Double</td>
+            <td>Mert, Melih</td>
+            <td>Mert</td>
+            <td>beendet</td>
+          </tr>
+          <tr>
+            <td>13.05.2023</td>
+            <td>1</td>
+            <td>01:04</td>
+            <td>Single</td>
+            <td>Kai</td>
+            <td>Kai</td>
+            <td>Abgebrochen</td>
+          </tr>
+          <tr>
+            <td>12.03.2023</td>
+            <td>3</td>
+            <td>05:00</td>
+            <td>Single</td>
+            <td>Melih</td>
+            <td>Melih</td>
+            <td>abgelaufen</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
