@@ -129,3 +129,9 @@ body {
     border-radius: 7px;
     cursor: pointer;
   }
+
+  .password-hint {
+    display: none;
+    color: red;
+    margin-top: 5px;
+  }
