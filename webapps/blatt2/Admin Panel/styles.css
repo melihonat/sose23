@@ -104,6 +104,12 @@
     background-color: #f0f0f0;
   }
   
+  /* Spieler Table */
+  #spieler tr:hover {
+    background-color: rgb(246, 179, 179);
+    cursor: pointer;
+  }
+
   /* General Styling */
   body {
     background: url(background.jpg);

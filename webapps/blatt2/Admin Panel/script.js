@@ -21,14 +21,25 @@ function changeTab(event) {
   
     // Ausgewählten Tab-Inhalt anzeigen
     document.getElementById(tabId).style.display = "block";
+
+    if (tabId === "spieler") {
+      // Bei Auswahl des "Spieler"-Tabs das "Spiele"-Tab verstecken
+      document.getElementById("spiele-page").style.display = "none";
+    }
   }
 
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
     var tabs = document.querySelectorAll('#tabs ul li a');
     var tabContents = document.querySelectorAll('.tab-content');
+    var spielerTable = document.getElementById('spieler').querySelector('table');
+    var spielerRows = spielerTable.querySelectorAll('tr');
   
-    for (var i = 0; i < tabs.length; i++) {
-      tabs[i].addEventListener('click', function(e) {
+    // Spiele eines einzelnen Spielers
+    var einzel_spielePage = document.getElementById('spiele-page');
+    var einzel_spieleTable = einzel_spielePage.querySelector('#spiele-table');
+  
+    for (var i = 1; i < spielerRows.length; i++) {
+      spielerRows[i].addEventListener('click', function(e) {
         e.preventDefault();
         var target = this.getAttribute('href');
   
@@ -37,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
   
         document.querySelector(target).style.display = 'block';
+  
       });
     }
   
