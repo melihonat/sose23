@@ -33,11 +33,14 @@ function validatePassword() {
   // Hinweis zurücksetzen
   hidePasswordHint();
 
+  // Validierungsvariable initialisieren
+  var isValid = true;
+
   // Mindestlänge von 7 Zeichen überprüfen
   if (password.length < 7) {
     passwordHint.textContent = "The password must be at least 7 characters long.";
     passwordHint.style.display = "block";
-    return;
+    isValid = false;
   }
 
   // Mindestens 5 Ziffern überprüfen
@@ -45,29 +48,32 @@ function validatePassword() {
   if (digitCount < 5) {
     passwordHint.textContent = "The password must contain at least 5 digits.";
     passwordHint.style.display = "block";
-    return;
+    isValid = false;
   }
 
   // Mindestens einen Großbuchstaben überprüfen
   if (!/[A-Z]/.test(password)) {
     passwordHint.textContent = "The password must contain at least one capital letter.";
     passwordHint.style.display = "block";
-    return;
+    isValid = false;
   }
 
   // Mindestens einen Kleinbuchstaben überprüfen
   if (!/[a-z]/.test(password)) {
     passwordHint.textContent = "The password must contain at least one lowercase letter.";
     passwordHint.style.display = "block";
-    return;
+    isValid = false;
   }
 
   // Passwort-Wiederholung überprüfen
   if (password !== passwordRepeat) {
     passwordHint.textContent = "The passwords do not match.";
     passwordHint.style.display = "block";
-    return;
+    isValid = false;
   }
+
+  // Rückgabe der Validierungsvariable
+  return isValid;
 }
 
 // Funktion zum Ausblenden des Hinweises
@@ -81,8 +87,13 @@ document.getElementById("register").addEventListener("submit", function(e) {
   e.preventDefault();
 
   // Passwort überprüfen
-  validatePassword();
+  var isValid = validatePassword();
 
-  // Wenn alle Überprüfungen erfolgreich sind, können Sie den Registrierungsprozess fortsetzen
+  // Wenn Validierung fehlschlägt, das Formular nicht absenden
+  if (!isValid) {
+    return;
+  }
+
+  // Wenn alle Überprüfungen erfolgreich sind, den Registrierungsprozess fortsetzen
   console.log("Registration submitted");
 });
