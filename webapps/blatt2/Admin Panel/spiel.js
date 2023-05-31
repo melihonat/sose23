@@ -68,6 +68,70 @@ function sortByDate() {
       sortIndicatorLevel.dataset.sortDirection = "asc";
     }
   }
+
+  function calculateStatistics() {
+    var table = document.querySelector("#spiel-table");
+    var rows = table.querySelectorAll("tbody tr");
+
+    var gewonnen = 0;
+    var verloren = 0;
+    var abgebrochen = 0;
+    var abgelaufen = 0;
+
+    rows.forEach(function(row) {
+      var status = row.cells[6].innerText;
+      if (status === "Beendet") {
+        var gewinner = row.cells[5].innerText;
+        if (gewinner === "Dontax") {
+          gewonnen++;
+        } else {
+          verloren++;
+        }
+      } else if (status === "Abgebrochen") {
+        abgebrochen++;
+      } else if (status === "Abgelaufen") {
+        abgelaufen++;
+      }
+    });
+
+    return {
+      gewonnen: gewonnen,
+      verloren: verloren,
+      abgebrochen: abgebrochen,
+      abgelaufen: abgelaufen
+    };
+  }
+
+  function displayStatistics() {
+    var statistics = calculateStatistics();
+
+    var chartCanvas = document.getElementById("chart");
+    var chartData =  {
+      labels: ["Gewonnen", "Verloren", "Abgebrochen", "Abgelaufen"],
+      datasets: [
+        {
+          label: "Statistiken",
+          data: [
+            statistics.gewonnen,
+            statistics.verloren,
+            statistics.abgebrochen,
+            statistics.abgelaufen
+          ],
+          backgroundColor: [
+            "green",
+            "red",
+            "orange",
+            "yellow"
+          ]
+        }
+      ]
+    };
+
+    new Chart(chartCanvas, {
+      type: "doughnut",
+      data: chartData
+    });
+  }
   
   document.addEventListener('DOMContentLoaded', function() {
     var sortDateButton = document.getElementById("sort-date-button");
@@ -77,5 +141,7 @@ function sortByDate() {
     sortLevelButton.addEventListener("click", sortByLevel);   
   
     sortDateButton.click(); // Standardmäßig nach Datum sortieren
+
+    displayStatistics();
   });
   

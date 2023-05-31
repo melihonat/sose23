@@ -127,3 +127,18 @@
     top: 0;
     background-color: #f5f5f5;
   }
+
+  /* Chart */
+  #chart {
+    position: relative;
+    z-index: 1;
+  }
+
+  #statistics {
+    position: relative;
+    z-index: 1;
+    background-color: #fff;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 7px;
+  }
