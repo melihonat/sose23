@@ -2,7 +2,7 @@
 /* Container */
 #container {
     width: 800px;
-    height: 600px;
+    height: 1000px;
     margin: 0 auto;
     background-color: #fff;
     opacity: 0.8;
@@ -130,15 +130,7 @@
 
   /* Chart */
   #chart {
+    margin-top: 5%;
     position: relative;
     z-index: 1;
-  }
-
-  #statistics {
-    position: relative;
-    z-index: 1;
-    background-color: #fff;
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 7px;
   }

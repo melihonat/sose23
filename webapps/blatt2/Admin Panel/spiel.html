@@ -15,7 +15,20 @@
       <h1>Spielerseite</h1>
     </div>
     <div id="spiel-liste">
-      <h2>Spiele des Spielers</h2>
+      <h2 id="spieler-titel"></h2>
+      <script>
+        // Funktion zum Abrufen des playerName aus der URL
+        function getPlayerNameFromURL() {
+          var queryString = window.location.search;
+          var urlParams = new URLSearchParams(queryString);
+          return urlParams.get('name');
+        }
+
+        // Den playerName abrufen und als Text für den Titel setzen
+        var playerName = getPlayerNameFromURL();
+        var spielerTitel = document.getElementById("spieler-titel");
+        spielerTitel.innerText = "Spiele von " + playerName;
+      </script>
       <table id="spiel-table">
         <thead>
           <tr>
