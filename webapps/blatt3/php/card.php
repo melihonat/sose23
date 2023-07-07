@@ -12,28 +12,40 @@ function insertCard($imageName) {
     $statement->execute();
 
     if ($statement->affected_rows > 0) {
-        echo "New Kamerih card created successfully.";
+        echo "Neue Kamerih-Karte erfolgreich erstellt.";
     } else {
-        echo "Error creating Kamerih card: " . $statement->error;
+        echo "Fehler beim Erstellen der Kamerih-Karte: " . $statement->error;
     }
 
     $statement->close();
 }
 
-// Nach Fehlern suchen
+// Prüfen, ob das Formular abgeschickt wurde
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
-        $targetDir = "images/";
+        $targetDir = "Kartenbilder/";
         $targetFile = $targetDir . basename($_FILES["image"]["name"]);
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
             insertCard($targetFile);
         } else {
-            echo "Error moving the uploaded file.";
+            echo "Fehler beim Verschieben der hochgeladenen Datei.";
         }
     } else {
-        echo "No file uploaded.";
+        echo "Keine Datei hochgeladen.";
     }
 }
-
-insertCard("c:/Users/Melih/Desktop/sose23/webapps/blatt3/Kartenbilder/5.png");
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Einfügen einer Karte</title>
+</head>
+<body>
+    <form method="POST" action="card.php" enctype="multipart/form-data">
+        <label>Bild auswählen:</label>
+        <input type="file" name="image" id="image"><br>
+        <input type="submit" value="Insert Card">
+    </form>
+</body>
+</html>
