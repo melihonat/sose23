@@ -3,7 +3,7 @@ include 'setupDB.php';
 function insertLevel($level, $anzahl_karten, $spielZeit) {
     global $conn;
     
-    // Escape input values zur Verhinderung von SQL-Injection
+    // Escape input-Werte zur Verhinderung von SQL-Injection
     $level = mysqli_real_escape_string($conn, $level);
     $anzahl_karten = mysqli_real_escape_string($conn, $anzahl_karten);
     $spielZeit = mysqli_real_escape_string($conn, $spielZeit);
