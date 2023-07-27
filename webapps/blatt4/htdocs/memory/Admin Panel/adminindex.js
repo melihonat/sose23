@@ -34,6 +34,8 @@ function changeTab(event) {
     displayStatistics();
   } else if (tabId === "karte") {
     fetchExistingCards();
+  } else if (tabId === "level") {
+    fetchExistingLevels();
   }
 }
 
@@ -109,7 +111,7 @@ function displayExistingCards(cards) {
   });
 }
 
-// Event listener für Form submission
+// Event listener für Form submission im Karte tab
 document.getElementById("add-card-form").addEventListener("submit", function(event) {
   event.preventDefault();
 
@@ -156,6 +158,87 @@ function deleteCard(cardId) {
   xhr.send("deleteCardId=" + cardId);
 }
 
+// Event listener für Form submission im Level tab
+document.getElementById("add-level-form").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  var formData = new FormData(event.target);
+  addNewLevel(formData);
+});
+
+// Existierende Level fetchen und anzeigen
+function fetchExistingLevels() {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "../level.php?getLevels=1", true);
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      var response = xhr.responseText;
+      console.log(response);
+      var levels = JSON.parse(response);
+      displayExistingLevels(levels);
+    } else {
+      console.error("Error fetching existing levels: " + xhr.status);
+    }
+  };
+  xhr.onerror = function () {
+    console.error("Network error");
+  };
+  xhr.send();  
+}
+
+function displayExistingLevels(levels) {
+  var tableBody = document.getElementById("level-table-body");
+  tableBody.innerHTML = "";
+
+  levels.forEach(function (level) {
+    var row = `
+      <tr>
+        <td>${level.level}</td>
+        <td>${level.anzahl_karten}</td>
+        <td>${level.spielZeit}</td>
+        <td><button onclick="deleteLevel(${level.id})">Delete</button></td>
+      </tr>
+    `;
+    tableBody.insertAdjacentHTML("beforeend", row);
+  });
+}
+
+function addNewLevel(formData) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "../level.php", true);
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      var response = xhr.responseText;
+      console.log(response);
+      fetchExistingLevels();
+    } else {
+      console.error("Error adding new level: " + xhr.status);
+    }
+  };
+  xhr.onerror = function () {
+    console.error("Network error");
+  };
+  xhr.send(formData);
+}
+
+function deleteLevel(levelId) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "../level.php", true);
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      var response = xhr.responseText;
+      console.log(response);
+      fetchExistingLevels();
+    } else {
+      console.error("Error deleting level: " + xhr.status);
+    }
+  };
+  xhr.onerror = function () {
+    console.error("Network error");
+  };
+  xhr.send("deleteLevelId=" + levelId);  
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   var tabs = document.querySelectorAll('#tabs ul li a');
 
@@ -166,4 +249,5 @@ document.addEventListener('DOMContentLoaded', function () {
   tabs[0].click(); // Display the first tab by default
   fetchPlayers();
   fetchExistingCards();
+  fetchExistingLevels();
 });

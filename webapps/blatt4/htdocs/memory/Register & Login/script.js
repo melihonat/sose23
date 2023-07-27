@@ -124,29 +124,37 @@ document.getElementById("login").addEventListener("submit", function (e) {
     var email = this.email.value;
     var password = this.password.value;
 
+
     // AJAX request auf player.php zum Login
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "../player.php", true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             var response = xhr.responseText;
-            console.log("Response status: ", xhr.status);
-            console.log("Response text: ", response);
-
-            if (response === "login_success") {
-                console.log("Login erfolgreich.");
-
-                console.log("Email: ", email);
-
-                if (email === "admin@memory.de") {
-                    window.location.href = "../Admin Panel/adminindex.html";
+    
+            try {
+                var jsonResponse = JSON.parse(response);
+    
+                if (jsonResponse.hasOwnProperty('status')) {
+                    if (jsonResponse.status === "login_success") {
+                        console.log(jsonResponse);
+                        // Erfolgreicher Login für normalen Spieler
+                        var playerData = jsonResponse.data;
+                        // Weiterleiten zum Hauptmenü mit SpielerID
+                        window.location.href = "../Main Menu/main_menu.html?id=" + encodeURIComponent(playerData.id);
+                    } else if (jsonResponse.status === "admin_login_success") {
+                        // Erfolgreicher Login für Admin
+                        console.log("Admin Login erfolgreich.");
+                        window.location.href = "../Admin Panel/adminindex.html";
+                    } else {
+                        console.log("Invalid response status");
+                    }
                 } else {
-                    window.location.href = "spiel.html?name=" + encodeURIComponent(email)
+                    console.log("Invalid response format");
                 }
-            } else {
-                // Request fehlgeschlagen
-                console.log("Ungültige E-Mail oder Passwort");
-                console.log("Email and password: ", email, password);
+            } catch (e) {
+                console.log("Error parsing JSON response");
+                console.log("Response: ", response);
             }
         } else {
             console.error("Error: " + xhr.status);

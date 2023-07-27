@@ -33,11 +33,16 @@ function loginPlayer($email, $password)
         // Daten gefunden, Überprüfen ob es sich um einen Admin handelt
         $row = mysqli_fetch_assoc($result);
         $userID = $row['id'];
+        $response = array('id' => $userID);
 
         if ($userID === 1) { // Admin user ID = 1
             echo "admin_login_success";
         } else {
-            echo "login_success";
+            $responseData = array(
+                'status' => 'login_success',
+                'data' => $row
+            );
+            echo json_encode($responseData);
         }
     } else {
         echo "login_failed";
@@ -118,6 +123,7 @@ function getPlayerData($playerName) {
             'level' => $row['level']
         );
     }
+    mysqli_stmt_close($statement);
     return $playerData;
 }
 

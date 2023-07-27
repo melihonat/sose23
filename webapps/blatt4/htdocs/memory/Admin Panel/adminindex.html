@@ -60,27 +60,29 @@
       </div>
       <div id="level" class="tab-content">
         <h2>Level</h2>
+        <!-- Formular um ein Level hinzuzufügen -->
+        <form id="add-level-form">
+          <label for="level">Level:</label>
+          <input type="text" name="level" required>
+          <label for="anzahl_karten">Anzahl Karten</label>
+          <input type="text" name="anzahl_karten" required>
+          <label for="spielZeit">Spielzeit in Sekunden:</label>
+          <input type="text" name="spielZeit" required>
+          <button type="submit">Level hinzufügen</button>
+        </form>
+        <!-- Tabelle um die existierenden Levels anzuzeigen -->
         <table>
-          <tr>
-            <th>Nummer</th>
-            <th>Spielzeit</th>
-            <th>Anzahl der Karten</th>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>6</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>4</td>
-            <td>12</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>5</td>
-            <td>24</td>
-          </tr>
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Anzahl Karten</th>
+              <th>Spielzeit</th>
+              <th>Aktion</th>
+            </tr>
+          </thead>
+          <tbody id="level-table-body">
+            <!-- Existierende Level werden hier angezeigt -->
+          </tbody>
         </table>
       </div>
       <div id="spiel" class="tab-content">
