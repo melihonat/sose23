@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Spielerseite</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/Chart.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <style>
+    /* CSS-Stile für die Spielerseite */
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="header">
+      <img src="logo.png" alt="Logo" id="logo">
+      <h1>Spielerseite</h1>
+    </div>
+    <div id="player-data">
+      <h2 id="spieler-titel"></h2>
+      <table id="player-data-table">
+        <tbody>
+          <tr>
+            <td>ID</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Name</td>
+            <td></td>
+          </tr>  
+          <tr>
+            <td>E-Mail</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Spiellevel</td>
+            <td></td>
+          </tr>  
+        </tbody>
+      </table>
+    </div>
+    <div id="spiel-liste">
+      <h2>Spiele von <span id="player-name"></span></h2>
+      <table id="spiel-table">
+        <thead>
+          <tr>
+            <th id="sort-date-button">Spieldatum<span id="sort-date-indicator" class="sort-indicator"></span></th>
+            <th id="sort-level-button">Level<span id="sort-level-indicator" class="sort-indicator"></span></th>
+            <th>Spieldauer</th>
+            <th>Spielart</th>
+            <th>Mitspieler</th>
+            <th>Gewinner</th>
+            <th>Verlauf</th>
+          </tr>
+        </thead>
+        <!-- Beispiel-Spiele -->
+        <tbody>
+        <tr>
+          <td>01.05.2023</td>
+          <td>2</td>
+          <td>03:27</td>
+          <td>Single</td>
+          <td>n/a</td>
+          <td>Dontax</td>
+          <td>Beendet</td>
+        </tr>
+        <tr>
+          <td>15.06.2023</td>
+          <td>3</td>
+          <td>05:42</td>
+          <td>Double</td>
+          <td>Sakayolo</td>
+          <td>Dontax</td>
+          <td>Beendet</td>
+        </tr>
+        <tr>
+          <td>03.12.1984</td>
+          <td>1</td>
+          <td>01:01</td>
+          <td>Single</td>
+          <td>n/a</td>
+          <td>n/a</td>
+          <td>Abgebrochen</td>
+        </tr>
+        <tr>
+          <td>23.12.2025</td>
+          <td>3</td>
+          <td>04:35</td>
+          <td>Double</td>
+          <td>Hülsenfrüchtel</td>
+          <td>Hülsenfrüchtel</td>
+          <td>Beendet</td>
+        </tr>
+        <tr>
+          <td>29.06.2022</td>
+          <td>5</td>
+          <td>12:05</td>
+          <td>Double</td>
+          <td>Sakayolo</td>
+          <td>Dontax</td>
+          <td>Beendet</td>
+        </tr>
+        <tr>
+          <td>26.03.2001</td>
+          <td>2</td>
+          <td>03:45</td>
+          <td>Double</td>
+          <td>Hülsenfrüchtel</td>
+          <td>Dontax</td>
+          <td>Beendet</td>
+        </tr>
+        <tr>
+          <td>30.05.2019</td>
+          <td>3</td>
+          <td>05:00</td>
+          <td>Single</td>
+          <td>n/a</td>
+          <td>n/a</td>
+          <td>Abgelaufen</td>
+        </tr>
+        <tr>
+          <td>03.02.2077</td>
+          <td>1</td>
+          <td>00:58</td>
+          <td>Single</td>
+          <td>n/a</td>
+          <td>Dontax</td>
+          <td>Beendet</td>
+        </tr>
+        </tbody>
+      </table>
+      <div id="statistics">
+        <canvas id="chart"></canvas>
+      </div>
+    </div>
+  </div>
+  <script src="spiel.js"></script>
+</body>
+</html>

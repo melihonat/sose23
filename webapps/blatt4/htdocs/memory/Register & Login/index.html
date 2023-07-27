@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Kamerih - Your favourite Game</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap');
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Kamerih!</h1>
+    <div class="tab">
+      <button class="tablinks active" onclick="openForm(event, 'register')">Register</button>
+      <button class="tablinks" onclick="openForm(event, 'login')">Login</button>
+    </div>
+    <hr>
+    <img src="logo.png" alt="Logo" class="logo">
+    <form id="register" class="form" method="post" action="../player.php">
+      <div class="row">
+        <div class="col">
+          <input type="text" placeholder="Name" name="name" required>
+        </div>
+        <div class="col">
+          <input type="text" placeholder="Surname" name="surname" required>
+        </div>
+      </div>
+      <input type="email" placeholder="E-Mail" name="email" required>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+      <input type="password" id="password-repeat" name="password-repeat" placeholder="Repeat Password" required>
+      <button type="submit">Register</button>
+    </form>
+    <form id="login" class="form" style="display: none;">
+      <input type="email" name="email" placeholder="E-Mail" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="hidden" name="login" value="1">
+      <button type="submit">Login</button>
+    </form>
+    <div id="password-hint" class="password-hint"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
