@@ -12,8 +12,8 @@
   <div class="container">
     <h1>Welcome to Kamerih!</h1>
     <div class="tab">
-      <button class="tablinks active" onclick="openForm(event, 'register')">Register</button>
-      <button class="tablinks" onclick="openForm(event, 'login')">Login</button>
+      <button id="registerTab" class="tablinks" onclick="openForm(event, 'register')">Register</button>
+      <button id="loginTab" class="tablinks active" onclick="openForm(event, 'login')">Login</button>
     </div>
     <hr>
     <img src="logo.png" alt="Logo" class="logo">
@@ -39,7 +39,6 @@
     </form>
     <div id="password-hint" class="password-hint"></div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>

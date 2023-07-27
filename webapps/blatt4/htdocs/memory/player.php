@@ -14,7 +14,8 @@ function insertPlayer($name, $surname, $email, $password)
 
     // Prüfung auf Fehler bei der Query-Ausführung
     if (mysqli_query($conn, $query)) {
-        echo "Spieler erfolgreich hinzugefügt.<br>";
+        $response = array('status' => 'registration_success');
+        echo json_encode($response);
     } else {
         echo "Fehler beim Hinzufügen des Spielers: " . mysqli_error($conn) . "<br>";
     }
@@ -33,14 +34,18 @@ function loginPlayer($email, $password)
         // Daten gefunden, Überprüfen ob es sich um einen Admin handelt
         $row = mysqli_fetch_assoc($result);
         $userID = $row['id'];
-        $response = array('id' => $userID);
+        $playerName = $row['spielname'];
+        $response = array('id' => $userID, 'name' => $playerName);
 
         if ($userID === 1) { // Admin user ID = 1
             echo "admin_login_success";
         } else {
             $responseData = array(
                 'status' => 'login_success',
-                'data' => $row
+                'data' => array(
+                    'id' => $userID,
+                    'name' => $playerName
+                )
             );
             echo json_encode($responseData);
         }

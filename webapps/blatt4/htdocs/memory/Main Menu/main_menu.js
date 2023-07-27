@@ -1,23 +1,16 @@
-window.addEventListener('DOMContentLoaded', () => {
-    // Fetch player information from the server and update the main menu
-    fetchPlayerInformation();
-});
-
-function fetchPlayerInformation() {
-    // You can use AJAX or fetch API to send a request to your server-side backend
-    // to retrieve player data based on the logged-in player's ID.
-    // Replace this example data with the actual data fetched from the server.
-    const playerData = {
-        id: 1,
-        spielname: "Player Name", // Replace this with the actual player's name
-        email: "player@example.com", // Replace this with the actual player's email
-        level: 0,
-    };
-
-    // Update the player's name in the main menu
-    const playerNameSpan = document.getElementById('player-name');
-    playerNameSpan.innerText = playerData.spielname;
-
-    // You can also update other player information in the main menu if needed
-    // e.g., email, level, etc.
+// Funktion um Query-Parameter aus der URL zu lesen (z.B. ID)
+function getQueryParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]'); // JS String Methode, um eckige Klammern durch Backslashes zu maskieren (um Sonderzeichen richtig zu kodieren)
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'); // Diese line soll einen bestimmten Query-Parameter in der URL abgleichen
+    var results = regex.exec(window.location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' ')); // Erzeugt von Menschen lesbaren String
 }
+
+// Welcome Nachricht, sodass der playerName angezeigt wird
+var playerName = getQueryParameter('name');
+document.getElementById('player-name').textContent = playerName;
+
+document.addEventListener("DOMContentLoaded", function () {
+    var profileLink = document.getElementById("profile-link");
+    profileLink.href = "../Admin Panel/spiel.html?name=" + encodeURIComponent(playerName);
+});

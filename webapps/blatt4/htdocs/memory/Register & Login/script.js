@@ -12,6 +12,11 @@ function openForm(evt, formName) {
     evt.currentTarget.className += " active";
 }
 
+// Anfangs-Tab setzen (Login)
+document.getElementById("loginTab").classList.add("active");
+document.getElementById("login").style.display = "block";
+document.getElementById("register").style.display = "none";
+
 // Passwort-Feld referenzieren
 var passwordInput = document.getElementById("password");
 
@@ -102,10 +107,22 @@ document.getElementById("register").addEventListener("submit", function (e) {
     xhr.open("POST", "../player.php", true);
     xhr.onload = function () {
         if (xhr.status === 200) {
-            // Request erfolgreich
-            console.log(xhr.responseText);
+            var response = xhr.responseText;
+            try {
+                var jsonResponse = JSON.parse(response);
+                if (jsonResponse.status === "registration_success") {
+                    // Registration successful, hide the registration form and show the login form
+                    document.getElementById("register").style.display = "none";
+                    document.getElementById("login").style.display = "block";
+                    console.log("Registration successful.");
+                } else {
+                    console.log("Invalid response status");
+                }
+            } catch (e) {
+                console.log("Error parsing JSON response");
+                console.log("Response: ", response);
+            }
         } else {
-            // Request fehlgeschlagen
             console.error("Error: " + xhr.status);
         }
     };
@@ -131,17 +148,16 @@ document.getElementById("login").addEventListener("submit", function (e) {
     xhr.onload = function () {
         if (xhr.status === 200) {
             var response = xhr.responseText;
-    
+
             try {
                 var jsonResponse = JSON.parse(response);
-    
+
                 if (jsonResponse.hasOwnProperty('status')) {
                     if (jsonResponse.status === "login_success") {
-                        console.log(jsonResponse);
                         // Erfolgreicher Login für normalen Spieler
                         var playerData = jsonResponse.data;
                         // Weiterleiten zum Hauptmenü mit SpielerID
-                        window.location.href = "../Main Menu/main_menu.html?id=" + encodeURIComponent(playerData.id);
+                        window.location.href = "../Main Menu/main_menu.html?id=" + encodeURIComponent(playerData.id) + "&name=" + encodeURIComponent(playerData.name);
                     } else if (jsonResponse.status === "admin_login_success") {
                         // Erfolgreicher Login für Admin
                         console.log("Admin Login erfolgreich.");
@@ -160,7 +176,7 @@ document.getElementById("login").addEventListener("submit", function (e) {
             console.error("Error: " + xhr.status);
         }
     };
-    
+
     xhr.onerror = function () {
         console.error("Network error");
     };
