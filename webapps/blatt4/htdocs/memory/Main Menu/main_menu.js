@@ -7,10 +7,29 @@ function getQueryParameter(name) {
 }
 
 // Welcome Nachricht, sodass der playerName angezeigt wird
-var playerName = getQueryParameter('name');
-document.getElementById('player-name').textContent = playerName;
-
 document.addEventListener("DOMContentLoaded", function () {
     var profileLink = document.getElementById("profile-link");
-    profileLink.href = "../Admin Panel/spiel.html?name=" + encodeURIComponent(playerName);
+    var playerId = getQueryParameter('id');
+    var playerName = getQueryParameter('name');
+
+    document.getElementById('player-name').textContent = playerName;
+
+    profileLink.href = "../Admin Panel/profil.html?name=" + encodeURIComponent(playerName);
+
+    var startGameLink = document.getElementById("start-game-link");
+    startGameLink.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        var url = "../Game/level_selection.html";
+
+        if (playerId) {
+            url += "?id=" + encodeURIComponent(playerId);
+        }
+
+        if (playerName) {
+            url += "&name=" + encodeURIComponent(playerName);
+
+        }
+        window.location.href = url;
+    });
 });

@@ -2,7 +2,7 @@
 include 'setupDB.php';
 
 // Funktion zum Einfügen eines Spiels in die Tabelle
-function insertPlay($einzeln, $spieltan, $dauer, $verlauf, $gewinner, $initiator, $mitspieler)
+function insertPlay($gameData)
 {
     global $conn;
 
@@ -11,15 +11,17 @@ function insertPlay($einzeln, $spieltan, $dauer, $verlauf, $gewinner, $initiator
     $statement = $conn->prepare($query);
 
     // Parameter-Binding (i=integer, s=string)
-    $statement->bind_param("isissii", $einzeln, $spieltan, $dauer, $verlauf, $gewinner, $initiator, $mitspieler);
+    $statement->bind_param("isissii", $gameData['einzeln'], $gameData['spieltan'], $gameData['dauer'], $gameData['verlauf'], $gameData['gewinner'], $gameData['initiator'], $gameData['mitspieler']);
 
     // Ausführen der Query
     $result = $statement->execute();
 
     if ($result) {
-        echo "Spiel erfolgreich eingefügt.<br>";
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
     } else {
-        echo "Fehler beim Einfügen des Spiels: " . $statement->error . "<br>";
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'Error inserting game data']);
     }
 
     $statement->close();
@@ -63,7 +65,19 @@ function getPlayerPlays($playerId)
 }
 
 // Rufe die spiel.php Seite mit einem player_id-Parameter auf (z.B. "spiel.php?player_id=2")
-if (isset($_GET['player_id'])) {
-    getPlayerPlays($_GET['player_id']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $postData = file_get_contents('php://input');
+    if ($postData) {
+        $gameData = json_decode($postData, true);
+        if ($gameData) {
+            insertPlay($gameData);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Invalid data received']);
+        }
+    } else {
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'No data received']);        
+    }
 }
 ?>

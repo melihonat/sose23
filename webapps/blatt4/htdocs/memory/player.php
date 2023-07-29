@@ -35,10 +35,16 @@ function loginPlayer($email, $password)
         $row = mysqli_fetch_assoc($result);
         $userID = $row['id'];
         $playerName = $row['spielname'];
-        $response = array('id' => $userID, 'name' => $playerName);
 
-        if ($userID === 1) { // Admin user ID = 1
-            echo "admin_login_success";
+        if ($userID === '1') { // Admin user ID = 1
+            $responseData = array(
+                'status' => 'admin_login_success',
+                'data' => array(
+                    'id' => $userID,
+                    'name' => $playerName
+                )
+            );
+            echo json_encode($responseData);
         } else {
             $responseData = array(
                 'status' => 'login_success',

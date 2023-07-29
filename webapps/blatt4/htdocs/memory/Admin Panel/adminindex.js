@@ -1,5 +1,5 @@
 function redirectToPlayerPage(playerName) {
-  var url = 'spiel.html?name=' + playerName;
+  var url = 'profil.html?name=' + playerName;
   window.location.href = url;
 }
 

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Level Selection</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Choose a Level</h1>
+            <form id="level-form">
+                <label for="levels">Select Level</label>
+                <select id="levels" name="levels"></select>
+                <!-- Levels werden hier dynamisch angezeigt -->
+                <button type="button" onclick="startGame(document.getElementById('levels').value)">Start Game</button>
+            </form>
+        </div>
+        <script src="level_selection.js"></script>
+    </body>
+</html>
