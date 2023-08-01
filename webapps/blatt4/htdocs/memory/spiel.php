@@ -32,19 +32,28 @@ function getPlayerPlays($playerId)
 {
     global $conn;
 
+    $playerId = intval($playerId);
+
     // SQL query um die Spiele eines Spielers zu bekommen
-    $query = "SELECT einzeln, spieltan, dauer, verlauf FROM Spiel WHERE initiator = '$playerId' OR mitspieler = '$playerId'";
+    $query = "SELECT einzeln, spieltan, dauer, gewinner, verlauf FROM Spiel WHERE initiator = ? OR mitspieler = ?";
+    $statement = $conn->prepare($query);
+
+    $statement->bind_param("ii", $playerId, $playerId);
 
     // Ausführen der query
-    $result = mysqli_query($conn, $query);
+    $result = $statement->execute();
+
     if ($result) {
+        $result = $statement->get_result();
+
         if (mysqli_num_rows($result) > 0) {
             $games = array();
-            while ($row = mysqli_fetch_assoc($result)) {
+            while ($row = $result->fetch_assoc()) {
                 $game = array(
                     'einzeln' => $row['einzeln'],
                     'spieltan' => $row['spieltan'],
                     'dauer' => $row['dauer'],
+                    'gewinner' => $row['gewinner'],
                     'verlauf' => $row['verlauf']
                 );
                 $games[] = $game;
@@ -57,11 +66,14 @@ function getPlayerPlays($playerId)
             header('Content-Type: application/json');
             echo $json;
         } else {
-            echo "Keine Spiele gefunden für $playerId.<br>";
+            header('Content-Type: application/json');
+            echo "[]";
         }
     } else {
-        echo "Fehler beim Abrufen von Spielen: " . mysqli_error($conn) . "<br>";
+        header('Content-Type: application/json');
+        echo "[]";
     }
+    $statement->close();
 }
 
 // Rufe die spiel.php Seite mit einem player_id-Parameter auf (z.B. "spiel.php?player_id=2")
@@ -78,6 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         header('Content-Type: application/json');
         echo json_encode(['error' => 'No data received']);        
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (isset($_GET['get_player_plays']) && isset($_GET['id'])) {
+        $playerId = $_GET['id'];
+        getPlayerPlays($playerId);
+    } else {
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'No player ID provided.']);
     }
 }
 ?>

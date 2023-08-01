@@ -1,5 +1,5 @@
-function redirectToPlayerPage(playerName) {
-  var url = 'profil.html?name=' + playerName;
+function redirectToPlayerPage(playerId, playerName) {
+  var url = 'profil.html?id=' + playerId + '&name=' + encodeURIComponent(playerName);
   window.location.href = url;
 }
 
@@ -65,7 +65,7 @@ function displayPlayers(players) {
 
   for (var i = 0; i < players.length; i++) {
     var player = players[i];
-    var row = `<tr onclick="redirectToPlayerPage('${player.name}')">
+    var row = `<tr onclick="redirectToPlayerPage(${player.id}, '${player.name}')">
                 <td>${player.id}</td>
                 <td>${player.name}</td>
                 <td>${player.email}</td>

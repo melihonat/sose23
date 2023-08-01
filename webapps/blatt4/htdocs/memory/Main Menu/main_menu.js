@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('player-name').textContent = playerName;
 
-    profileLink.href = "../Admin Panel/profil.html?name=" + encodeURIComponent(playerName);
+    profileLink.href = "../Admin Panel/profil.html?id=" + encodeURIComponent(playerId) + "&name=" + encodeURIComponent(playerName);
 
     var startGameLink = document.getElementById("start-game-link");
     startGameLink.addEventListener("click", function (e) {

@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let startTime, endTime, timerInterval;
   let gameTimeRemaining = 0;
+  var spieltanFormatted = '';
 
   const memoryBoard = document.querySelector('.memory-board');
   const timerElement = document.getElementById('timer');
@@ -172,10 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (matchedPairs === cardImages.length / 2) {
       verlauf = 'Beendet';
-      if (!winnerScreenShown)  {
+      if (!winnerScreenShown) {
         stopTimer();
         showWinnerScreen();
-        winnerScreenShown=true;
+        winnerScreenShown = true;
       }
     } else if (gameTimeRemaining <= 0) {
       verlauf = 'Abgelaufen';
@@ -183,9 +184,19 @@ document.addEventListener('DOMContentLoaded', () => {
       verlauf = 'Abgebrochen';
     }
 
+    // Format the spieltan datetime
+    const spieltanDate = new Date(startTime);
+    const spieltanYear = spieltanDate.getFullYear();
+    const spieltanMonth = String(spieltanDate.getMonth() + 1).padStart(2, '0');
+    const spieltanDay = String(spieltanDate.getDate()).padStart(2, '0');
+    const spieltanHours = String(spieltanDate.getHours()).padStart(2, '0');
+    const spieltanMinutes = String(spieltanDate.getMinutes()).padStart(2, '0');
+    const spieltanSeconds = String(spieltanDate.getSeconds()).padStart(2, '0');
+    spieltanFormatted = `${spieltanYear}-${spieltanMonth}-${spieltanDay} ${spieltanHours}:${spieltanMinutes}:${spieltanSeconds}`;
+
     const gameResults = {
       einzeln: true, // only solo gamemode so far
-      spieltan: startTime,
+      spieltan: spieltanFormatted,
       dauer: matchedPairs === cardImages.length / 2 ? Math.floor((new Date().getTime() - startTime) / 1000) : spielZeit, // Spielzeitberechnung wenn der Solospieler gewonnen hat
       verlauf: verlauf,
       gewinner: matchedPairs === cardImages.length / 2 ? playerId : null, // Solo player ID wenn der Spieler gewonnen hat, ansonsten null
@@ -244,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
       stopTimer();
       gameResults = {
         einzeln: true, // only solo gamemode so far
-        spieltan: startTime,
+        spieltan: spieltanFormatted,
         dauer: spielZeit,
         verlauf: 'Abgebrochen',
         gewinner: null,
@@ -266,3 +277,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+

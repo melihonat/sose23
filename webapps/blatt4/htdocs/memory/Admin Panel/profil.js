@@ -45,98 +45,186 @@ function displayPlayerData(playerData) {
   `;
 }
 
+function fetchPlayerGames(playerId, currentPage, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "../spiel.php?get_player_plays=1&id=" + playerId, true);
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      var response = xhr.responseText;
+      console.log("Response: ", response);
+      var gameData = JSON.parse(response);
+      console.log("Parsed gameData: ", gameData);
+      if (callback) {
+        callback(gameData, currentPage);
+      }
+    } else {
+      console.error("Error fetching player games: " + xhr.status);
+    }
+  };
+  xhr.onerror = function () {
+    console.error("Network error");
+  };
+  xhr.send();
+}
+
+function displayPlayerGames(gameData, currentPage) {
+  var gameTable = document.getElementById("spiel-table");
+  var tbody = gameTable.getElementsByTagName("tbody")[0];
+  tbody.innerHTML = "";
+
+  var startIndex = (currentPage - 1) * gamesPerPage;
+  var endIndex = startIndex + gamesPerPage;
+
+  for (var i = startIndex; i < endIndex && i < gameData.length; i++) {
+    var game = gameData[i];
+    var row = document.createElement("tr");
+
+    var spieltanCell = document.createElement("td");
+    spieltanCell.textContent = game.spieltan;
+    row.appendChild(spieltanCell);
+
+    var levelCell = document.createElement("td");
+    levelCell.textContent = game.level;
+    row.appendChild(levelCell);    
+
+    var dauerCell = document.createElement("td");
+    dauerCell.textContent = game.dauer + " seconds";
+    row.appendChild(dauerCell);  
+    
+    var spielartCell = document.createElement("td");
+    spielartCell.textContent = game.spielart;
+    row.appendChild(spielartCell);     
+
+    var mitspielerCell = document.createElement("td");
+    mitspielerCell.textContent = game.mitspieler ? game.mitspieler : "n/a";
+    row.appendChild(mitspielerCell); 
+
+    var gewinnerCell = document.createElement("td");
+    gewinnerCell.textContent = game.gewinner ? game.gewinner : "n/a";
+    row.appendChild(gewinnerCell);
+
+    var verlaufCell = document.createElement("td");
+    verlaufCell.textContent = game.verlauf;
+    row.appendChild(verlaufCell); 
+
+    tbody.appendChild(row);
+  }
+  displayPagination(gameData.length, currentPage);
+}
+
+function displayPagination(totalGames, currentPage) {
+  var totalPages = Math.ceil(totalGames / gamesPerPage);
+
+  var paginationContainer = document.getElementById("pagination");
+  paginationHTML = "";
+
+  if (currentPage > 1) {
+    paginationHTML += '<button onclick="changePage(' + (currentPage - 1) + ')">Previous</button>';
+  }
+
+  for (var i = 1; i <= totalPages; i++) {
+    if (i === currentPage) {
+      paginationHTML += '<button class="active">' + i + '</button>';
+    } else {
+      paginationHTML += '<button onclick="changePage(' + i + ')">' + i + '</button>';
+    }
+    paginationContainer.innerHTML = paginationHTML;
+  }
+}
+
+function changePage(pageNumber) {
+  currentPage = pageNumber;
+
+  fetchPlayerGames(playerId, currentPage, function (gameData) {
+    displayPlayerGames(gameData, currentPage);
+  });
+}
+
+var playerId;
 function decodePlayerNameFromURL() {
   var queryString = window.location.search;
   var urlParams = new URLSearchParams(queryString);
   var playerName = urlParams.get('name');
-  return decodeURIComponent(playerName);
+  playerId = urlParams.get('id');
+  return { playerName: decodeURIComponent(playerName), playerId: playerId};
 }
 
 function convertDate(dateString) {
-    var parts = dateString.split(".");
-    var day = parseInt(parts[0]);
-    var month = parseInt(parts[1]) - 1; // -1 weil Monate im Javascript Datum bei 0 beginnen
-    var year = parseInt(parts[2]);
-    return new Date(year, month, day);
+    var parts = dateString.split(" ");
+    var datePart = parts[0];
+    var timePart = parts[1];
+
+    var dateParts = datePart.split("-");
+    var year = parseInt(dateParts[0]);
+    var month = parseInt(dateParts[1]) - 1; // Monate sind 0-based
+    var day = parseInt(dateParts[2]);
+
+    var timeParts = timePart.split(":");
+    var hours = parseInt(timeParts[0]);
+    var minutes = parseInt(timeParts[1]);
+    var seconds = parseInt(timeParts[2]);
+
+    return new Date(year, month, day, hours, minutes, seconds);
 }
 function sortByDate() {
-    var table = document.querySelector("#spiel-table");
-    var rows = Array.from(table.querySelectorAll("tbody tr"));
-  
-    rows.sort(function(a, b) {
-      var dateA = convertDate(a.cells[0].innerText);
-      var dateB = convertDate(b.cells[0].innerText);
-      return dateA.getTime() - dateB.getTime();
+    gameData.sort(function (a, b) {
+      var dateA = convertDate(a.spieltan);
+      var dateB = convertDate(b.spieltan);
+      return sortDirectionDate === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
     });
   
     var sortIndicatorLevel = document.querySelector("#sort-level-indicator");
     sortIndicatorLevel.textContent = ""; // Icon bei Level leeren
   
     var sortIndicatorDate = document.querySelector("#sort-date-indicator");
-    var sortDirection = sortIndicatorDate.dataset.sortDirection || "asc";
   
-    if (sortDirection === "asc") {
-      rows.forEach(function(row) {
-        table.querySelector("tbody").appendChild(row);
-      });
+    if (sortDirectionDate === "asc") {
       sortIndicatorDate.textContent = "▲";
-      sortIndicatorDate.dataset.sortDirection = "desc";
+      sortDirectionDate = "desc";
     } else {
-      rows.reverse();
-      rows.forEach(function(row) {
-        table.querySelector("tbody").appendChild(row);
-      });
       sortIndicatorDate.textContent = "▼";
-      sortIndicatorDate.dataset.sortDirection = "asc";
+      sortDirectionDate = "asc";
     }
+    currentPage = 1;
+    displayPlayerGames(gameData, currentPage);
   }
   
   function sortByLevel() {
-    var table = document.querySelector("#spiel-table");
-    var rows = Array.from(table.querySelectorAll("tbody tr"));
-  
-    rows.sort(function(a, b) {
-      var levelA = parseInt(a.cells[1].innerText);
-      var levelB = parseInt(b.cells[1].innerText);
-      return levelA - levelB;
+    gameData.sort(function (a,b) {
+      var levelA = parseInt(a.level);
+      var levelB = parseInt(b.level);
+      return sortDirectionLevel ===  "asc" ? levelA - levelB : levelB - levelA;
     });
   
     var sortIndicatorDate = document.querySelector("#sort-date-indicator");
     sortIndicatorDate.textContent = ""; // Icon bei Spieldatum leeren
   
     var sortIndicatorLevel = document.querySelector("#sort-level-indicator");
-    var sortDirection = sortIndicatorLevel.dataset.sortDirection || "asc";
   
-    if (sortDirection === "asc") {
-      rows.forEach(function(row) {
-        table.querySelector("tbody").appendChild(row);
-      });
+    if (sortDirectionLevel === "asc") {
       sortIndicatorLevel.textContent = "▲";
-      sortIndicatorLevel.dataset.sortDirection = "desc";
+      sortDirectionLevel = "desc";
     } else {
-      rows.reverse();
-      rows.forEach(function(row) {
-        table.querySelector("tbody").appendChild(row);
-      });
+      gameData.reverse();
       sortIndicatorLevel.textContent = "▼";
-      sortIndicatorLevel.dataset.sortDirection = "asc";
+      sortDirectionLevel = "asc";
     }
+    currentPage = 1;
+    displayPlayerGames(gameData, currentPage);
   }
 
-  function calculateStatistics() {
-    var table = document.querySelector("#spiel-table");
-    var rows = table.querySelectorAll("tbody tr");
-
+  function calculateStatistics(gameData, playerId) {
     var gewonnen = 0;
     var verloren = 0;
     var abgebrochen = 0;
     var abgelaufen = 0;
 
-    rows.forEach(function(row) {
-      var status = row.cells[6].innerText;
+    playerId = parseInt(playerId, 10);
+
+    gameData.forEach(function(game) {
+      var status = game.verlauf;
       if (status === "Beendet") {
-        var gewinner = row.cells[5].innerText;
-        if (gewinner === "Dontax") {
+        if (parseInt(game.gewinner, 10) === playerId) {
           gewonnen++;
         } else {
           verloren++;
@@ -156,8 +244,8 @@ function sortByDate() {
     };
   }
 
-  function displayStatistics() {
-    var statistics = calculateStatistics();
+  function displayStatistics(gameData, playerId) {
+    var statistics = calculateStatistics(gameData, playerId);
 
     var chartCanvas = document.getElementById("chart");
     var chartData =  {
@@ -187,21 +275,36 @@ function sortByDate() {
     });
   }
   
+  var currentPage = 1;
+  var gamesPerPage = 10;
+  var gameData = [];
+  var sortDirectionDate = "asc";
+  var sortDirectionLevel = "asc";
+
   document.addEventListener('DOMContentLoaded', function() {
-    // Spielernamen aus der URL holen
-    var playerName = decodePlayerNameFromURL();
+    // Spielernamen und ID aus der URL holen
+    var { playerName, playerId } = decodePlayerNameFromURL();
+
     // Fetchen und anzeigen von Spielerdaten
     fetchPlayerData(playerName);
-    
+
+    //Fetchen und anzeigen von Spielen des Spielers
+    fetchPlayerGames(playerId, 1, function(data, currentPage) {
+      gameData = data;
+      displayPlayerGames(gameData, 1);
+      displayStatistics(gameData, playerId);
+      displayPagination(gameData.length, 1);
+    });    
     
     var sortDateButton = document.getElementById("sort-date-button");
-    sortDateButton.addEventListener("click", sortByDate);
+    sortDateButton.addEventListener("click", function () {
+      sortByDate();
+    });
   
     var sortLevelButton = document.getElementById("sort-level-button");
-    sortLevelButton.addEventListener("click", sortByLevel);   
+    sortLevelButton.addEventListener("click", function () {
+      sortByLevel();
+    });   
   
     sortDateButton.click(); // Standardmäßig nach Datum sortieren
-
-    displayStatistics();
   });
-  
