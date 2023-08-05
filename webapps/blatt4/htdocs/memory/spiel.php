@@ -7,11 +7,11 @@ function insertPlay($gameData)
     global $conn;
 
     // Vorbereitung der SQL-Query
-    $query = "INSERT INTO Spiel (einzeln, spieltan, dauer, verlauf, gewinner, initiator, mitspieler) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO Spiel (einzeln, spieltan, level, dauer, verlauf, gewinner, initiator, mitspieler) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $statement = $conn->prepare($query);
 
     // Parameter-Binding (i=integer, s=string)
-    $statement->bind_param("isissii", $gameData['einzeln'], $gameData['spieltan'], $gameData['dauer'], $gameData['verlauf'], $gameData['gewinner'], $gameData['initiator'], $gameData['mitspieler']);
+    $statement->bind_param("isiissii", $gameData['einzeln'], $gameData['spieltan'], $gameData['level'], $gameData['dauer'], $gameData['verlauf'], $gameData['gewinner'], $gameData['initiator'], $gameData['mitspieler']);
 
     // Ausführen der Query
     $result = $statement->execute();
@@ -32,13 +32,18 @@ function getPlayerPlays($playerId)
 {
     global $conn;
 
-    $playerId = intval($playerId);
+    if ($playerId != null) {
+        $playerId = intval($playerId);
+        // SQL query um die Spiele eines Spielers zu bekommen
+        $query = "SELECT einzeln, spieltan, level, dauer, gewinner, verlauf, initiator, mitspieler FROM Spiel WHERE initiator = ? OR mitspieler = ?";
+        $statement = $conn->prepare($query);
 
-    // SQL query um die Spiele eines Spielers zu bekommen
-    $query = "SELECT einzeln, spieltan, dauer, gewinner, verlauf FROM Spiel WHERE initiator = ? OR mitspieler = ?";
-    $statement = $conn->prepare($query);
-
-    $statement->bind_param("ii", $playerId, $playerId);
+        $statement->bind_param("ii", $playerId, $playerId);
+    } else {
+        // SQL query um alle Spiele zu bekommen, wenn keine player ID bereitgestellt wurde
+        $query = "SELECT einzeln, spieltan, level, dauer, gewinner, verlauf FROM Spiel";
+        $statement = $conn->prepare($query);
+    }
 
     // Ausführen der query
     $result = $statement->execute();
@@ -52,10 +57,25 @@ function getPlayerPlays($playerId)
                 $game = array(
                     'einzeln' => $row['einzeln'],
                     'spieltan' => $row['spieltan'],
+                    'level' => $row['level'],
                     'dauer' => $row['dauer'],
                     'gewinner' => $row['gewinner'],
                     'verlauf' => $row['verlauf']
                 );
+
+                if (isset($row['initiator'])) {
+                    $game['initiator'] = $row['initiator'];
+                } else {
+                    $game['initiator'] = null;
+                }
+            
+                // Check if 'mitspieler' key exists before accessing it
+                if (isset($row['mitspieler'])) {
+                    $game['mitspieler'] = $row['mitspieler'];
+                } else {
+                    $game['mitspieler'] = null;
+                }
+
                 $games[] = $game;
             }
 
@@ -89,15 +109,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         header('Content-Type: application/json');
-        echo json_encode(['error' => 'No data received']);        
+        echo json_encode(['error' => 'No data received']);
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($_GET['get_player_plays']) && isset($_GET['id'])) {
         $playerId = $_GET['id'];
         getPlayerPlays($playerId);
-    } else {
-        header('Content-Type: application/json');
-        echo json_encode(['error' => 'No player ID provided.']);
+    } elseif (isset($_GET['get_all_games'])){ // Get all games for admin panel
+        $sql = "SELECT * FROM spiel";
+        $result = $conn->query($sql);
+
+        if ($result) {
+            $games = array();
+            while ($row = $result->fetch_assoc()) {
+                $games[] = $row;
+            }
+            echo json_encode($games);
+        } else {
+            echo "Error fetching games.";
+        }
+        exit;
     }
 }
-?>

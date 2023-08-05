@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var playerId = getQueryParameter('id');
   var playerName = getQueryParameter('name');
+  var level = getQueryParameter('level');
+
   const cardBack = 'card-back.png';
 
   let hasFlippedCard = false;
@@ -27,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let winnerScreenShown = false;
 
-  const level = getQueryParameter('level');
   let anzahl_karten = 0;
   let spielZeit = 0;
 
@@ -36,24 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
   fetch(`../level.php?getLevels=true`)
     .then((response) => response.json())
     .then((data) => {
-      const selectedLevel = data.find((item) => item.level === level);
+      selectedLevel = data.find((item) => item.level === level);
       if (selectedLevel) {
         anzahl_karten = selectedLevel.anzahl_karten;
         spielZeit = selectedLevel.spielZeit;
-
         // endTime berechnen
         startTime = new Date().getTime();
         endTime = startTime + spielZeit * 1000;
 
-        // Array für Karten erstellen
+        // Array für Karten erstellen (Achtung: Karten müssen nummeriert sein! z.B. 1.png, 2.png, 3.png ...)
         for (let i = 1; i <= anzahl_karten / 2; i++) {
           cardImages.push(`${i}.png`);
           cardImages.push(`${i}.png`);
         }
-        // Shuffle the card images
+        // Karten shufflen
         cardImages.sort(() => 0.5 - Math.random());
 
-        // Create card elements
+        // Kartenelemente hinzufügen
         cardImages.forEach(image => {
           const cardElement = document.createElement('div');
           cardElement.classList.add('memory-card');
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("Error fetching levels: ", error);
     });
 
-  // Flip card function
+  // Karte umdrehen
   function flipCard() {
     if (lockBoard) return;
     if (this === firstCard) return;
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkForMatch();
   }
 
-  // Check for card match
+  // Gleiche Karte aufgedeckt?
   function checkForMatch() {
     let isMatch = firstCard.querySelector('.back-face').src === secondCard.querySelector('.back-face').src;
 
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     incrementMoves();
   }
 
-  // Disable matched cards
+  // Wenn gleiche Karten aufgedeckt, diese entfernen
   function disableCards() {
     lockBoard = true;
 
@@ -108,15 +108,15 @@ document.addEventListener('DOMContentLoaded', () => {
       matchedPairs++;
 
       if (matchedPairs === cardImages.length / 2) {
-        // All pairs have been matched, game over
+        // Alle paare wurden gefunden
         endGame();
       }
 
       resetBoard();
-    }, 1000); // Delay before deleting cards
+    }, 1000); // Kurzer Delay bevor dem Löschen der Karten
   }
 
-  // Unflip unmatched cards
+  // Ungleiche Karten gefunden, also wieder umdrehen
   function unflipCards() {
     lockBoard = true;
 
@@ -128,18 +128,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
   }
 
-  // Reset board state
+  // Board reset
   function resetBoard() {
     [hasFlippedCard, lockBoard] = [false, false];
     [firstCard, secondCard] = [null, null];
   }
 
-  // Increment moves counter
+  // Moves counter
   function incrementMoves() {
     moves++;
   }
 
-  // Start the timer
+  // Timer starten
   startTime = new Date().getTime();
   endTime = startTime + spielZeit * 1000;
 
@@ -175,6 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
       verlauf = 'Beendet';
       if (!winnerScreenShown) {
         stopTimer();
+        const xpReward = getXpReward(level);
+        updatePlayerXpAndLevel(playerId, xpReward);
         showWinnerScreen();
         winnerScreenShown = true;
       }
@@ -184,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
       verlauf = 'Abgebrochen';
     }
 
-    // Format the spieltan datetime
+    // Datetime Formatierung
     const spieltanDate = new Date(startTime);
     const spieltanYear = spieltanDate.getFullYear();
     const spieltanMonth = String(spieltanDate.getMonth() + 1).padStart(2, '0');
@@ -197,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameResults = {
       einzeln: true, // only solo gamemode so far
       spieltan: spieltanFormatted,
+      level: level,
       dauer: matchedPairs === cardImages.length / 2 ? Math.floor((new Date().getTime() - startTime) / 1000) : spielZeit, // Spielzeitberechnung wenn der Solospieler gewonnen hat
       verlauf: verlauf,
       gewinner: matchedPairs === cardImages.length / 2 ? playerId : null, // Solo player ID wenn der Spieler gewonnen hat, ansonsten null
@@ -240,6 +243,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const winnerMessage = document.getElementById('winner-name');
       winnerMessage.textContent = playerName;
       winnerScreen.style.display = 'block';
+
+      let mainMenuButton = document.createElement('button');
+      mainMenuButton.innerText = 'Zurück zum Hauptmenü';
+
+      mainMenuButton.addEventListener('click', () => {
+        var url = '../Main Menu/main_menu.html';
+        if (playerId) {
+          url += '?id=' + encodeURIComponent(playerId);
+        }
+
+        if (playerName) {
+          url += '&name=' + encodeURIComponent(playerName);
+        }
+
+        window.location.href = url;
+      });
+
+      document.getElementById('winner-screen').append(mainMenuButton);
     }
   }
 
@@ -256,6 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
       gameResults = {
         einzeln: true, // only solo gamemode so far
         spieltan: spieltanFormatted,
+        level: level,
         dauer: spielZeit,
         verlauf: 'Abgebrochen',
         gewinner: null,
@@ -276,5 +298,36 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = url;
     }
   }
-});
 
+  function getXpReward(gameLevel) {
+    return gameLevel * 10;
+  }
+
+  function updatePlayerXpAndLevel(playerId, xpReward) {
+    fetch(`../player.php?updatePlayerXp&id=${playerId}&xp=${xpReward}`)
+      .then(response => response.text())
+      .then(text => {
+
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          console.error('Parsing error:', e);
+        }
+      })
+
+      .then(data => {
+        console.log('Player XP and level updated:', data);
+        let newLevel = data.level;
+        let levelUpMessageElement = document.createElement('p');
+        if (data.hasLeveledUp) {
+          levelUpMessageElement.textContent = `Du bist aufgestiegen! Dein neues Level ist ${newLevel}`;
+        } else {
+          levelUpMessageElement.textContent = `Du hast ${xpReward} XP verdient! Dein aktuelles Level ist ${newLevel}`;
+        }
+        document.getElementById('winner-screen').append(levelUpMessageElement);
+      })
+      .catch(error => {
+        console.error('Error updating player XP and level:', error);
+      });
+  }
+});

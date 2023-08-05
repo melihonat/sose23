@@ -1,6 +1,6 @@
-function fetchPlayerData(playerName) {
+function fetchPlayerData(playerId) {
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "../player.php?get_player_data=1&name=" + playerName, true);
+  xhr.open("GET", "../player.php?get_player_data=1&id=" + playerId, true);
   xhr.onload = function () {
     if (xhr.status === 200) {
       var response = xhr.responseText;
@@ -51,9 +51,7 @@ function fetchPlayerGames(playerId, currentPage, callback) {
   xhr.onload = function () {
     if (xhr.status === 200) {
       var response = xhr.responseText;
-      console.log("Response: ", response);
       var gameData = JSON.parse(response);
-      console.log("Parsed gameData: ", gameData);
       if (callback) {
         callback(gameData, currentPage);
       }
@@ -68,6 +66,7 @@ function fetchPlayerGames(playerId, currentPage, callback) {
 }
 
 function displayPlayerGames(gameData, currentPage) {
+
   var gameTable = document.getElementById("spiel-table");
   var tbody = gameTable.getElementsByTagName("tbody")[0];
   tbody.innerHTML = "";
@@ -286,7 +285,7 @@ function sortByDate() {
     var { playerName, playerId } = decodePlayerNameFromURL();
 
     // Fetchen und anzeigen von Spielerdaten
-    fetchPlayerData(playerName);
+    fetchPlayerData(playerId);
 
     //Fetchen und anzeigen von Spielen des Spielers
     fetchPlayerGames(playerId, 1, function(data, currentPage) {

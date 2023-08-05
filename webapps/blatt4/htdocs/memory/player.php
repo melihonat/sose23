@@ -60,8 +60,21 @@ function loginPlayer($email, $password)
     }
 }
 
+function logoutPlayer() {
+    session_start();
+
+    session_destroy();
+
+    header("Location: \memory\Register & Login\index.html");
+    exit;
+}
+
+if (isset($_GET['logout'])) {
+    logoutPlayer();
+}
+
 // Prüfen, ob das Formular abgeschickt wurde
-if (isset($_POST['email']) && isset($_POST['password'])) {
+if (isset($_POST['email']) && isset($_POST['password']) && !isset($_POST['update_profile'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
@@ -115,13 +128,13 @@ if (isset($_GET['get_players'])) {
     exit;
 }
 
-function getPlayerData($playerName) {
+function getPlayerData($playerId) {
     global $conn;
 
-    $query = "SELECT * FROM spieler WHERE spielname = ?";
+    $query = "SELECT * FROM spieler WHERE id = ?";
     $statement = mysqli_prepare($conn, $query);
 
-    mysqli_stmt_bind_param($statement, "s", $playerName);
+    mysqli_stmt_bind_param($statement, "i", $playerId);
     mysqli_stmt_execute($statement);
     $result = mysqli_stmt_get_result($statement);
 
@@ -139,11 +152,114 @@ function getPlayerData($playerName) {
 }
 
 // Checken ob Request fürs Fetchen der Spielerdaten ist
-if (isset($_GET['get_player_data']) && isset($_GET['name'])) {
-    $playerName = $_GET['name'];
-    $playerData = getPlayerData($playerName);
+if (isset($_GET['get_player_data']) && isset($_GET['id'])) {
+    $playerId = $_GET['id'];
+    $playerData = getPlayerData($playerId);
 
     header('Content-Type: application/json');
     echo json_encode($playerData);
     exit;
 }
+
+function updatePlayerProfile($id, $name, $email, $password) {
+    global $conn;
+
+    $query = "UPDATE spieler SET spielname = ?, email = ?, passwort = ? WHERE id = ?";
+    $statement = mysqli_prepare($conn, $query);
+    
+    mysqli_stmt_bind_param($statement, "sssi", $name, $email, $password, $id);
+    $result = mysqli_stmt_execute($statement);
+
+    mysqli_stmt_close($statement);
+
+    return $result;
+}
+
+if (isset($_POST['update_profile'])) {
+
+    if (isset($_POST['id'], $_POST['name'], $_POST['email'], $_POST['password'])) {
+        $id = $_POST['id'];
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        $result = updatePlayerProfile($id, $name, $email, $password);
+
+        if ($result) {
+            echo json_encode(array('status' => 'update_success'));
+        } else {
+            echo "Error updating profile: " . mysqli_error($conn) . "<br>";
+        }
+    } else {
+        echo "Required data missing from request.<br>";
+    }
+}
+
+function deletePlayerProfile($id) {
+    global $conn;
+
+    $query = "DELETE FROM spieler WHERE id = ?";
+    $statement = mysqli_prepare($conn, $query);
+
+    mysqli_stmt_bind_param($statement, "i", $id);
+    $result = mysqli_stmt_execute($statement);
+
+    mysqli_stmt_close($statement);
+
+    return $result;
+}
+
+if (isset($_GET['delete_profile'])) {
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
+
+        $result = deletePlayerProfile($id);
+
+        if ($result) {
+            echo json_encode(array('status' => 'delete_success'));
+        } else {
+            echo "Error deleting profile: " . mysqli_error($conn) . "<br>";
+        }
+    } else {
+        echo "Required data missing from request.<br>";
+    }
+}
+
+function updatePlayerXp ($playerId, $xpReward) {
+    global $conn;
+
+  // Get the player's current XP and level from the database
+  $sql = "SELECT xp, level FROM spieler WHERE id = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("i", $playerId);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $player = $result->fetch_assoc();
+
+  // Add the reward to the player's current XP
+  $newXp = $player['xp'] + $xpReward;
+
+  // Determine if the player levels up (this is a simple example)
+  $newLevel = $player['level'];
+  $hasLeveledUp = false;
+  if ($newXp >= ($newLevel + 1) * 100) { // assuming 100 XP required for each level
+    $newLevel++;
+    $hasLeveledUp = true;
+  }
+
+  // Update the player's XP and level in the database
+  $sql = "UPDATE spieler SET xp = ?, level = ? WHERE id = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("iii", $newXp, $newLevel, $playerId);
+  $stmt->execute();
+
+  // Return the updated XP and level
+  return array("xp" => $newXp, "level" => $newLevel, "hasLeveledUp" => $hasLeveledUp);
+}
+
+if (isset($_GET['updatePlayerXp'])) {
+    $playerId = $_GET['id'];
+    $xpReward = $_GET['xp'];
+    $result = updatePlayerXp($playerId, $xpReward);
+    echo json_encode($result);
+}  

@@ -32,4 +32,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         window.location.href = url;
     });
+
+    var editProfileLink = document.getElementById("edit-profile-link");
+    editProfileLink.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        var url = "/memory/Main Menu/editprofile.html";
+
+        if (playerId) {
+            url += "?id=" + encodeURIComponent(playerId);
+        }
+        window.location.href = url;
+    });
+
+    var logoutButton = document.getElementById("logout-button");
+    logoutButton.addEventListener("click", function () {
+        window.location.href = '../player.php?logout=true';
+    })
 });

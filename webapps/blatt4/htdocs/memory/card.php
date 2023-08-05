@@ -22,7 +22,6 @@ function insertCard($imageName) {
 
 function getAllCards() {
     global $conn;
-
     $selectQuery = "SELECT * FROM Karte";
     $result = $conn->query($selectQuery);
 
@@ -32,6 +31,7 @@ function getAllCards() {
     }
     return $cards;
 }
+
 function deleteCard($cardId) {
     global $conn;
 
