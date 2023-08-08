@@ -131,3 +131,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+
+function sendInvitation($invitedPlayerID, $selectedLevel) {
+    // Davon ausgehen, dass die Einladung erfolgreich ist
+    $response = array("success" => true);
+    echo json_encode($response);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["invite_player"])) {
+    $invitedPlayerID = $_POST["invite_player"];
+    $selectedLevel = $_POST["selected_level"];
+
+    sendInvitation($invitedPlayerID, $selectedLevel);
+}

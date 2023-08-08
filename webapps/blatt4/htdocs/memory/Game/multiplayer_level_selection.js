@@ -1,28 +1,21 @@
-function getQueryParameter(parameterName) {
+ function getQueryParameter(parameterName) {
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);
     return urlParams.get(parameterName);
-}
+ }
 
-function startGame(level) {
-    var playerName = getQueryParameter("name");
-    var playerId = getQueryParameter("id");
-    var selectedLevel = document.getElementById("levels").value;
-    var selectedOption = levelSelect.options[levelSelect.selectedIndex];
+ function startMultiplayerGame(level) {
+    var inviterName = getQueryParameter("inviterName");
+    var inviterId = getQueryParameter("inviterId");
+    var inviteeName = getQueryParameter("inviteeName");
+    var inviteeId = getQueryParameter("inviteeId");
 
-    var anzahl_karten = selectedOption.dataset.anzahl_karten;
-    var spielZeit = selectedOption.dataset.spielzeit;
-
-    var url = "game.html?level=" + level;
-    if (playerName) {
-        url += "&name=" + encodeURIComponent(playerName);
-    }
-    if (playerId) {
-        url += "&id=" + encodeURIComponent(playerId);
-    }
+    var url = "multiplayer_game.html?level=" + level;
+    url += "&inviterId=" + encodeURIComponent(inviterId) + "&inviterName=" + encodeURIComponent(inviterName);
+    url += "&inviteeId=" + encodeURIComponent(inviteeId) + "&inviteeName=" + encodeURIComponent(inviteeName);
 
     window.location.href = url;
-}
+ }
 
 var levelSelect;
 
@@ -30,6 +23,14 @@ document.addEventListener("DOMContentLoaded", function () {
     var levelForm = document.getElementById("level-form");
     levelSelect = document.getElementById("levels");
     fetchLevels();
+
+    var currentPlayerId = getQueryParameter("inviterId") || getQueryParameter("inviteeId");
+    var currentPlayerRole = getQueryParameter("inviterId") ? "inviter" : "invitee";
+
+    if (currentPlayerRole === "invitee") {
+        levelSelect.disabled = true;
+        document.querySelector("button[type='button']").disabled = true;
+    }
 
     function fetchLevels() {
         // AJAX request zum Server um die Levels zu erkennen

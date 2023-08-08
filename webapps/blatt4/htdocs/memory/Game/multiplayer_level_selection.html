@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Multiplayer Level Selection</title>
+        <!-- Hier CSS linken -->
+    </head>
+    <body>
+        <div class="container">
+            <h1>Levelauswahl</h1>
+            <form id="level-form">
+                <label for="levels">Wähle ein Level</label>
+                <select id="levels" name="levels"></select>
+                <!-- Hier werden die Levels dynamisch angezeigt -->
+                <button type="button" onclick="startMultiplayerGame(document.getElementById('levels').value)">Spiel starten</button>
+            </form>
+        </div>
+        <script src="multiplayer_level_selection.js"></script>
+    </body>
+</html>

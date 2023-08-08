@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.getElementById('delete-profile-btn').addEventListener('click', function() {
-  if (!confirm('Are you sure you want to delete your profile? This cannot be undone!')) {
+  if (!confirm('Willst du dein Profil wirklich löschen? Das kann nicht rückgängig gemacht werden!')) {
     return;
   }
 
