@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Kamerih - Online Memory Game</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+    <div class="memory-board">
+        <!-- Hier werden die Karten generiert -->
+    </div>
+    <div id="timer" class="timer"></div>
+    <p id="current-turn">Jetzt am Zug: <span id="current-player-name"></span>!</p>
+    <p id="player1-score">Player 1's Score: 0</p>
+    <p id="player2-score">Player 2's Score: 0</p>
+    <button id="cancel-button">Spiel abbrechen</button>
+    <div id="winner-screen" style="display: none;">
+        <h1>Glückwunsch, <span id="winner-name"></span>!</h1>
+        <p>Du hast das Spiel gewonnen!</p>
+    </div>
+    <script src="game.js"></script>
+</body>
+
+</html>

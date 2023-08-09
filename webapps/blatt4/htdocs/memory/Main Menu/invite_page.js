@@ -74,7 +74,7 @@ function sendInvitation(inviteeId) {
     xhr.onload = function () {
         var response = JSON.parse(xhr.responseText);
         if (response.status === 'success') {
-            alert("Einladung gesendet!");
+            // Alert wird schon in displayPlayersOnSameLevel() geschickt
         } else {
             alert (response.message || "Fehler beim Senden der Einladung.");
         }
@@ -104,10 +104,12 @@ function checkInviteStatus() {
             var url = "../Game/multiplayer_level_selection.html?inviterId=" + playerId + 
                       "&InviterName=" + encodeURIComponent(playerName) + 
                       "&inviteeId=" + response.inviteeId + 
-                      "&inviteeName=" + encodeURIComponent(response.inviteeName);
+                      "&inviteeName=" + encodeURIComponent(response.inviteeName) +
+                      "&currentPlayerRole=inviter" +
+                      "&invitationId=" + response.invitationId;
             window.location.href = url;
         } else if (response.status === 'REJECTED') {
-            alert('The invitee has declined your invitation.');
+            alert('Dein gewünschter Gegner hat deine Einladung abgelehnt.');
             clearInterval(checkInviteStatusInterval);
         }
     };

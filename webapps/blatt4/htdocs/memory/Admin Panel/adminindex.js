@@ -294,7 +294,7 @@ function displayExistingLevels(levels) {
         <td>${level.level}</td>
         <td>${level.anzahl_karten}</td>
         <td>${level.spielZeit}</td>
-        <td><button onclick="deleteLevel(${level.id})">Delete</button></td>
+        <td><button class="delete-level-btn" data-level-id="${level.level}">Delete</button></td>
       </tr>
     `;
     tableBody.insertAdjacentHTML("beforeend", row);
@@ -319,6 +319,9 @@ function addNewLevel(formData) {
 }
 
 function deleteLevel(levelId) {
+  var formData = new FormData();
+  formData.append('deleteLevelId', levelId);
+
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "../level.php", true);
   xhr.onload = function () {
@@ -332,8 +335,15 @@ function deleteLevel(levelId) {
   xhr.onerror = function () {
     console.error("Network error");
   };
-  xhr.send("deleteLevelId=" + levelId);
+  xhr.send(formData);
 }
+
+document.getElementById("level-table-body").addEventListener("click", function (event) {
+  if (event.target.classList.contains("delete-level-btn")) {
+    var levelId = event.target.dataset.levelId;
+    deleteLevel(levelId);
+  }
+});
 
 document.addEventListener('DOMContentLoaded', function () {
   var tabs = document.querySelectorAll('#tabs ul li a');

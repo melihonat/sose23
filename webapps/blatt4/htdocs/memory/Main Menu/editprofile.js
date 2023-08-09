@@ -6,7 +6,7 @@ function getQueryParameter(name) {
 }
 
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   var playerId = getQueryParameter('id'); // Reuse your getQueryParameter function
 
   // Fetch the player's data from the server
@@ -20,14 +20,14 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
   // Add an event listener to handle form submission
-  document.getElementById('edit-profile-form').addEventListener('submit', function(e) {
+  document.getElementById('edit-profile-form').addEventListener('submit', function (e) {
     e.preventDefault();
 
     var id = getQueryParameter('id');
     var name = document.getElementById('player-name').value;
     var email = document.getElementById('player-email').value;
     var password = document.getElementById('player-password').value;
-    
+
 
     // Make a request to the server to update the profile
     fetch('../player.php', {
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: `update_profile=true&id=${id}&name=${name}&email=${email}&password=${password}`
-    })    
+    })
       .then(response => response.text())
       .then(text => {
         return JSON.parse(text);
@@ -58,34 +58,53 @@ document.addEventListener("DOMContentLoaded", function() {
       })
       .catch(error => {
         console.error('Error:', error);
-      });    
+      });
   });
 });
 
-document.getElementById('delete-profile-btn').addEventListener('click', function() {
+document.getElementById('delete-profile-btn').addEventListener('click', function () {
   if (!confirm('Willst du dein Profil wirklich löschen? Das kann nicht rückgängig gemacht werden!')) {
     return;
   }
 
   var id = getQueryParameter('id');
 
-  fetch('../player.php?delete_profile=true', {
+  // Spiele des Spielers aus der Database entfernen
+  fetch('../player.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: `id=${id}`
+    body: `delete_games=true&id=${id}`
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.status === 'delete_success') {
-      alert("Profile deleted!");
-      window.location.href = '../Register & Login/index.html'; 
-    } else {
-      alert("Error deleting profile!");
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'delete_success') {
+        // Profil löschen
+        fetch('../player.php?delete_profile=true', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `id=${id}`
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'delete_success') {
+              alert("Profil und zugehörige Spiele gelöscht!!");
+              window.location.href = '../Register & Login/index.html';
+            } else {
+              alert("Fehler beim Löschen des Profils!");
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      } else {
+        alert("Fehler beim Löschen der Spiele!");
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
 });

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" type="text/css" href="kartenUndLevel.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap');
+    </style>
+    <form action="http://localhost/memory/card.php" method="POST"></form>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <img src="logo.png" alt="Logo" id="logo">
+            <h1>Karten und Level</h1>
+        </div>
+        <div id="tabs">
+            <ul>
+                <li><a href="#karte" class="tab-link active" onclick="changeTab(event)">Karte</a></li>
+                <li><a href="#level" class="tab-link" onclick="changeTab(event)">Level</a></li>
+            </ul>
+            <div id="karte" class="tab-content">
+                <h2>Karten anschauen</h2>
+                <!-- Container um die Karten anzuzeigen -->
+                <div id="karte-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Karte</th>
+                            </tr>
+                        </thead>
+                        <tbody id="card-table-body">
+                            <!-- Karten werden hier eingefügt -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination buttons -->
+                <div id="pagination">
+                    <button id="prev-page-btn">Previous</button>
+                    <button id="next-page-btn">Next</button>
+                </div>
+            </div>
+            <div id="level" class="tab-content">
+                <h2>Level anschauen</h2>
+                <!-- Tabelle um die existierenden Levels anzuzeigen -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Anzahl Karten</th>
+                            <th>Spielzeit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="level-table-body">
+                        <!-- Existierende Level werden hier angezeigt -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="main-menu-button">
+        <button id="back-button">Zurück zum Hauptmenü</button>
+    </div>
+    <script src="kartenUndLevel.js"></script>
+</body>
+
+</html>

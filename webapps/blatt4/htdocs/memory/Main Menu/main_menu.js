@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (playerName) {
             url += "&name=" + encodeURIComponent(playerName);
-
         }
         window.location.href = url;
     });
@@ -73,6 +72,22 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = url;
     });
 
+    var kartenLevelLink = document.getElementById("karten-level-link");
+    kartenLevelLink.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        var url = "kartenUndLevel.html";
+
+        if (playerId) {
+            url += "?id=" + encodeURIComponent(playerId);
+        }
+        if (playerName) {
+            url += "&name=" + encodeURIComponent(playerName);
+        }
+        window.location.href = url;
+    });
+
+
     var logoutButton = document.getElementById("logout-button");
     logoutButton.addEventListener("click", function () {
         window.location.href = '../player.php?logout=true';
@@ -82,6 +97,29 @@ document.addEventListener("DOMContentLoaded", function () {
     setInterval(checkForInvites, 5000);
 });
 
+function showInviteModal(inviterId, inviterName) {
+    const modal = document.getElementById("inviteModal");
+    const acceptBtn = document.getElementById("acceptInviteBtn");
+    const declineBtn = document.getElementById("declineInviteBtn");
+    const message = document.getElementById("inviteMessage");
+
+    message.textContent = `${inviterName} hat dich zu einem Spiel eingeladen! Nimmst du an?`;
+
+    modal.style.display = "block";
+
+    acceptBtn.onclick = function() {
+        acceptInvite(inviterId, inviterName);
+        modal.style.display = "none";
+    };
+
+    declineBtn.onclick = function() {
+        declineInvite(inviterId, inviterName);
+        modal.style.display = "none";
+    };
+}
+
+
+
 var playerId = getQueryParameter('id');
 var playerName = getQueryParameter('name');
 function checkForInvites() {
@@ -90,13 +128,7 @@ function checkForInvites() {
     xhr.onload = function () {
         var response = JSON.parse(xhr.responseText);
         if (response.status === 'success') {
-            if (confirm(response.inviterName + " hat dich zu einem Spiel eingeladen! Nimmst du an?")) {
-                // Einladung angenommen
-                acceptInvite(response.inviterId, response.inviterName);
-            } else {
-                // Einladung abgelehnt
-                declineInvite(response.inviterId, response.inviterName);
-            }
+            showInviteModal(response.inviterId, response.inviterName);
         } else if (response.status === 'no_invites') {
             // Keine Einladungen gefunden, nichts machen
         } else {
@@ -116,12 +148,17 @@ function acceptInvite(inviterId, inviterName) {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onload = function () {
         var response = JSON.parse(xhr.responseText);
+        console.log(response);
         if (response.status === 'success' && response.action === 'accepted') {
             // Redirect zur Level Selection
-            window.location.href = "../Game/multiplayer_level_selection.html?inviterId=" + inviterId +
-                                    "&inviterName=" + encodeURIComponent(inviterName) + 
-                                    "&inviteeId=" + playerId + 
-                                    "&inviteeName=" + encodeURIComponent(playerName);
+            var url = "../Game/multiplayer_level_selection.html?inviterId=" + inviterId +
+                "&inviterName=" + encodeURIComponent(inviterName) +
+                "&inviteeId=" + playerId +
+                "&inviteeName=" + encodeURIComponent(playerName) +
+                "&currentPlayerRole=invitee" +
+                "&invitationId=" + response.invitationId;
+
+            window.location.href = url;
         }
     };
     xhr.onerror = function () {

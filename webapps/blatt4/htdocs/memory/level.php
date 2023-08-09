@@ -22,7 +22,7 @@ function deleteLevel($levelId)
 {
     global $conn;
 
-    $query = "DELETE FROM Level WHERE id = '$levelId'";
+    $query = "DELETE FROM Level WHERE level = '$levelId'";
 
     if (mysqli_query($conn, $query)) {
         echo "Level erfolgreich gelöscht.";

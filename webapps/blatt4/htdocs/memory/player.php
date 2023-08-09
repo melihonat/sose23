@@ -231,6 +231,36 @@ if (isset($_POST['update_profile'])) {
     }
 }
 
+function deletePlayerGames($playerId) {
+    global $conn;
+
+    $query = "DELETE FROM spiel WHERE initiator = ? OR mitspieler = ?";
+    $statement = mysqli_prepare($conn, $query);
+
+    mysqli_stmt_bind_param($statement, "ii", $playerId, $playerId);
+    $result = mysqli_stmt_execute($statement);
+
+    if(!$result) {
+        echo "Error: " . mysqli_stmt_error($statement);
+    }
+
+    mysqli_stmt_close($statement);
+
+    return $result;
+}
+
+if (isset($_POST['delete_games']) && isset($_POST['id'])) {
+    $id = $_POST['id'];
+
+    $result = deletePlayerGames($id);
+
+    if ($result) {
+        echo json_encode(array('status' => 'delete_success'));
+    } else {
+        echo json_encode(array('status' => 'delete_error'));
+    }
+}
+
 function deletePlayerProfile($id)
 {
     global $conn;
@@ -371,8 +401,27 @@ if (isset($_POST['action']) && $_POST['action'] == 'accept_invite') {
     $stmt->bind_param('ii', $inviterId, $inviteeId);
     $stmt->execute();
 
-    echo json_encode(['status' => 'success', 'action' => 'accepted']);
-    exit;
+    // InvitationId getten
+    $query = "SELECT id FROM invitations WHERE inviter_id = ? AND invitee_id = ? AND status = 'ACCEPTED'";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('ii', $inviterId, $inviteeId);
+
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $invitationId = $row['id'];
+
+            echo json_encode(['status' => 'success', 'action' => 'accepted', 'invitationId' => $invitationId]);
+            exit;
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Keine passende Einladung gefunden!']);
+            exit;
+        }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Fehler beim getten der Invitation ID.']);
+        exit;
+    }
 } else if (isset($_POST['action']) && $_POST['action'] == 'decline_invite') {
     $inviterId = $_POST['inviter_id'];
     $inviteeId = $_POST['invitee_id'];

@@ -157,10 +157,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentTime >= endTime) {
       clearInterval(timerInterval);
       timerElement.textContent = 'Zeit ist um!';
+      document.getElementById("cancel-button").style.display = "none";
+      document.getElementById("back-to-menu-button").style.display = "block";
       endGame();
     }
   }
   timerInterval = setInterval(updateTimer, 1000);
+
+  document.getElementById("back-to-menu-button").addEventListener("click", function () {
+    var url = '../Main Menu/main_menu.html';
+    if (playerId) {
+      url += '?id=' + encodeURIComponent(playerId);
+    }
+
+    if (playerName) {
+      url += '&name=' + encodeURIComponent(playerName);
+    }
+
+    window.location.href = url;
+  });
 
   function stopTimer() {
     clearInterval(timerInterval);
@@ -271,14 +286,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleCancelGame() {
+    const spieltanDate = new Date(startTime);
+    const spieltanYear = spieltanDate.getFullYear();
+    const spieltanMonth = String(spieltanDate.getMonth() + 1).padStart(2, '0');
+    const spieltanDay = String(spieltanDate.getDate()).padStart(2, '0');
+    const spieltanHours = String(spieltanDate.getHours()).padStart(2, '0');
+    const spieltanMinutes = String(spieltanDate.getMinutes()).padStart(2, '0');
+    const spieltanSeconds = String(spieltanDate.getSeconds()).padStart(2, '0');
+    spieltanFormatted = `${spieltanYear}-${spieltanMonth}-${spieltanDay} ${spieltanHours}:${spieltanMinutes}:${spieltanSeconds}`;
+
     const confirmCancel = window.confirm('Bist du dir sicher, dass du das Spiel abbrechen möchtest?');
     if (confirmCancel) {
       stopTimer();
+
       gameResults = {
         einzeln: true, // only solo gamemode so far
         spieltan: spieltanFormatted,
         level: level,
-        dauer: spielZeit,
+        dauer: Math.floor((new Date().getTime() - startTime) / 1000),
         verlauf: 'Abgebrochen',
         gewinner: null,
         initiator: playerId,

@@ -97,7 +97,7 @@ function getPlayerPlays($playerId)
 }
 
 // Rufe die spiel.php Seite mit einem player_id-Parameter auf (z.B. "spiel.php?player_id=2")
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_GET['startGame'])) {
     $postData = file_get_contents('php://input');
     if ($postData) {
         $gameData = json_decode($postData, true);
@@ -143,4 +143,41 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["invite_player"])) {
     $selectedLevel = $_POST["selected_level"];
 
     sendInvitation($invitedPlayerID, $selectedLevel);
+}
+
+// GameStarted Flag
+if (isset($_GET['startGame'], $_GET['invitationId'], $_GET['selectedLevel'])) {
+    $invitationId = $_GET['invitationId'];
+    $selectedLevel = $_GET['selectedLevel'];
+
+    $query = "UPDATE invitations SET gameStarted = TRUE, selectedLevel = ? WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('ii', $selectedLevel, $invitationId);
+    $stmt->execute();
+
+    echo json_encode(['success' => true]);
+    exit;
+}
+
+// Long polling um als Invitee zu checken ob das Spiel startet
+if (isset($_GET['hasGameStarted']) && isset($_GET['invitationId'])) {
+    $invitationId = $_GET['invitationId'];
+
+    $query = "SELECT gameStarted, selectedLevel FROM invitations WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $invitationId);
+
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            echo json_encode(['gameStarted' => $row['gameStarted'], 'selectedLevel' => $row['selectedLevel']]);
+        } else {
+            echo json_encode(['error' => 'Keine passende Einladung gefunden!']);
+        }
+    } else {
+        echo json_encode(['error' => 'Konnte Spielstatus nicht fetchen!']);
+    }
+    exit;
 }
