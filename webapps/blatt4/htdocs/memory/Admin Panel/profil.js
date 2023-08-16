@@ -118,7 +118,7 @@ function displayPagination(totalGames, currentPage) {
   paginationHTML = "";
 
   if (currentPage > 1) {
-    paginationHTML += '<button onclick="changePage(' + (currentPage - 1) + ')">Previous</button>';
+    paginationHTML += '<button onclick="changePage(' + (currentPage - 1) + ')">Zurück</button>';
   }
 
   for (var i = 1; i <= totalPages; i++) {

@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then(data => {
         if (data.status === 'update_success') {
-          alert("Success!");
+          alert("Erfolgreich!");
           var url = '../Main Menu/main_menu.html';
           if (id) {
             url += '?id=' + encodeURIComponent(id);
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }
           window.location.href = url;
         } else {
-          alert("Error!");
+          alert("Fehler!");
         }
       })
       .catch(error => {

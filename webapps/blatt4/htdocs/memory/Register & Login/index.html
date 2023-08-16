@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Kamerih - Your favourite Game</title>
+  <title>Kamerih - Das Kartenspiel</title>
   <link rel="stylesheet" type="text/css" href="styles.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap');
@@ -10,9 +10,9 @@
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to Kamerih!</h1>
+    <h1>Willkommen bei Kamerih!</h1>
     <div class="tab">
-      <button id="registerTab" class="tablinks" onclick="openForm(event, 'register')">Register</button>
+      <button id="registerTab" class="tablinks" onclick="openForm(event, 'register')">Registrieren</button>
       <button id="loginTab" class="tablinks active" onclick="openForm(event, 'login')">Login</button>
     </div>
     <hr>
@@ -23,17 +23,17 @@
           <input type="text" placeholder="Name" name="name" required>
         </div>
         <div class="col">
-          <input type="text" placeholder="Surname" name="surname" required>
+          <input type="text" placeholder="Nachname" name="surname" required>
         </div>
       </div>
       <input type="email" placeholder="E-Mail" name="email" required>
-      <input type="password" id="password" name="password" placeholder="Password" required>
-      <input type="password" id="password-repeat" name="password-repeat" placeholder="Repeat Password" required>
-      <button type="submit">Register</button>
+      <input type="password" id="password" name="password" placeholder="Passwort" required>
+      <input type="password" id="password-repeat" name="password-repeat" placeholder="Passwort wiederholen" required>
+      <button type="submit">Registrieren</button>
     </form>
     <form id="login" class="form" style="display: none;">
       <input type="email" name="email" placeholder="E-Mail" required>
-      <input type="password" name="password" placeholder="Password" required>
+      <input type="password" name="password" placeholder="Passwort" required>
       <input type="hidden" name="login" value="1">
       <button type="submit">Login</button>
     </form>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 09. Aug 2023 um 17:07
+-- Erstellungszeit: 13. Aug 2023 um 19:05
 -- Server-Version: 10.4.28-MariaDB
 -- PHP-Version: 8.2.4
 
@@ -32,12 +32,7 @@ CREATE TABLE `invitations` (
   `inviter_id` int(11) NOT NULL,
   `invitee_id` int(11) NOT NULL,
   `status` enum('PENDING','ACCEPTED','REJECTED','PROCESSED') DEFAULT 'PENDING',
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
-  `gameStarted` tinyint(1) DEFAULT 0,
-  `selectedLevel` int(11) DEFAULT NULL,
-  `gameState` varchar(5000) NOT NULL,
-  `currentTurn` int(11) NOT NULL,
-  `winner_id` int(11) DEFAULT NULL
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -58,6 +53,7 @@ CREATE TABLE `karte` (
 INSERT INTO `karte` (`id`, `bild`) VALUES
 (2, 0x4b617274656e62696c6465722f342e706e67),
 (3, 0x4b617274656e62696c6465722f372e706e67),
+(4, 0x4b617274656e62696c6465722f382e706e67),
 (5, 0x4b617274656e62696c6465722f312e706e67),
 (6, 0x4b617274656e62696c6465722f322e706e67),
 (7, 0x4b617274656e62696c6465722f332e706e67),
@@ -70,8 +66,7 @@ INSERT INTO `karte` (`id`, `bild`) VALUES
 (14, 0x4b617274656e62696c6465722f31332e706e67),
 (15, 0x4b617274656e62696c6465722f31342e706e67),
 (16, 0x4b617274656e62696c6465722f31352e706e67),
-(17, 0x4b617274656e62696c6465722f31362e706e67),
-(18, 0x4b617274656e62696c6465722f382e706e67);
+(17, 0x4b617274656e62696c6465722f31362e706e67);
 
 -- --------------------------------------------------------
 
@@ -90,16 +85,12 @@ CREATE TABLE `level` (
 --
 
 INSERT INTO `level` (`level`, `anzahl_karten`, `spielZeit`) VALUES
-(1, 8, 90),
-(2, 8, 60),
-(3, 16, 120),
-(4, 16, 90),
-(5, 16, 60),
-(6, 24, 120),
-(7, 24, 90),
-(8, 24, 60),
-(9, 32, 120),
-(10, 32, 90);
+(1, 8, 120),
+(2, 8, 90),
+(3, 8, 60),
+(4, 16, 120),
+(5, 16, 90),
+(6, 16, 60);
 
 -- --------------------------------------------------------
 
@@ -184,13 +175,13 @@ ALTER TABLE `spieler`
 -- AUTO_INCREMENT für Tabelle `invitations`
 --
 ALTER TABLE `invitations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT für Tabelle `karte`
 --
 ALTER TABLE `karte`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT für Tabelle `spieler`

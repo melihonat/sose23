@@ -43,7 +43,7 @@ function validatePassword() {
 
     // Mindestlänge von 7 Zeichen überprüfen
     if (password.length < 7) {
-        passwordHint.textContent = "The password must be at least 7 characters long.";
+        passwordHint.textContent = "Das Passwort muss mindestens 7 Zeichen lang sein.";
         passwordHint.style.display = "block";
         isValid = false;
     }
@@ -51,28 +51,28 @@ function validatePassword() {
     // Mindestens 1 Ziffer überprüfen
     var digitCount = password.match(/\d/g).length;
     if (digitCount < 1) {
-        passwordHint.textContent = "The password must contain at least 1 digit.";
+        passwordHint.textContent = "Das Passwort muss mindestens 1 Ziffer enthalten.";
         passwordHint.style.display = "block";
         isValid = false;
     }
 
     // Mindestens einen Großbuchstaben überprüfen
     if (!/[A-Z]/.test(password)) {
-        passwordHint.textContent = "The password must contain at least one capital letter.";
+        passwordHint.textContent = "Das Passwort muss mindestens einen Großbuchstaben enthalten.";
         passwordHint.style.display = "block";
         isValid = false;
     }
 
     // Mindestens einen Kleinbuchstaben überprüfen
     if (!/[a-z]/.test(password)) {
-        passwordHint.textContent = "The password must contain at least one lowercase letter.";
+        passwordHint.textContent = "Das Passwort muss mindestens einen Kleinbuchstaben enthalten.";
         passwordHint.style.display = "block";
         isValid = false;
     }
 
     // Passwort-Wiederholung überprüfen
     if (password !== passwordRepeat) {
-        passwordHint.textContent = "The passwords do not match.";
+        passwordHint.textContent = "Die Kennwörter stimmen nicht überein.";
         passwordHint.style.display = "block";
         isValid = false;
     }

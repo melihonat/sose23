@@ -2,23 +2,34 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Edit Profile</title>
-  <link rel="stylesheet" type="text/css" href="styles.css">
+  <title>Profil editieren</title>
+  <link rel="stylesheet" type="text/css" href="editprofile.css">
 </head>
 <body>
   <div id="container">
-    <h1>Edit Profile</h1>
+    <div id="header">
+      <img src="logo.png" alt="Logo" id="logo">
+      <h1>Profil editieren</h1>
+    </div>
     <form id="edit-profile-form">
-      <input type="hidden" id="player-id"> <!-- ID field hidden -->
-      <label for="player-name">Name:</label>
-      <input type="text" id="player-name" name="name">
-      <label for="player-email">Email:</label>
-      <input type="email" id="player-email" name="email">
-      <label for="player-password">Password:</label>
-      <input type="password" id="player-password" name="password">
-      <button type="submit">Save Changes</button>
+      <input type="hidden" id="player-id">
+      <div>
+        <label for="player-name">Name:</label>
+        <input type="text" id="player-name" name="name">
+      </div>
+      <div>
+        <label for="player-email">Email:</label>
+        <input type="email" id="player-email" name="email">
+      </div>
+      <div>
+        <label for="player-password">Passwort:</label>
+        <input type="password" id="player-password" name="password">
+      </div>
+      <div id="button-container">
+        <button type="submit">Änderungen Speichern</button>
+        <button id="delete-profile-btn" type="button">Profil löschen</button>
+      </div>
     </form>
-    <button id="delete-profile-btn" type="button">Profil löschen</button>
   </div>
   <script src="editprofile.js"></script>
 </body>

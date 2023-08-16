@@ -9,6 +9,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  font-family: 'Chelsea Market', cursive;
 }
 
 .memory-board {
@@ -56,4 +57,154 @@ body {
 /* Verstecke die Karten, die als "matched" markiert sind */
 .memory-card.matched {
   visibility: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Chelsea Market', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+    max-width: 800px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+select {
+    appearance: none;
+    background: url('dropdown-arrow.png') no-repeat right center;
+    background-size: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 300px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button {
+  font-family: 'Chelsea Market', cursive; 
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #da3846af;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 7px 7px 0 0;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #e60a1c;
+    color: #fff;
+}
+
+#timer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 7px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 7px;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+}
+
+#timer {
+  font-size: 24px;
+  color: #000;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 5%;
+}
+
+#cancel-button {
+  background-color: #da3846af;
+  border: none;
+  border-radius: 7px;
+  color: white;
+  font-size: 16px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 10%;
+}
+
+#cancel-button:hover {
+  background-color: #e60a1c;
+}
+
+#winner-screen {
+  display: flex;
+  flex-direction: column;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 7px;
+  padding: 20px;
+  max-width: 400px;
+  z-index: 9999;
+}
+
+#winner-name {
+  color: #da3846af;
+  text-align: center;
 }

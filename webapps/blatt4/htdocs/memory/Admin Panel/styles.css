@@ -1,8 +1,8 @@
 
 /* Container */
 #container {
-    width: 800px;
-    height: 1000px;
+    max-width: 800px;
+    height: 1300px;
     margin: 0 auto;
     background-color: #fff;
     opacity: 0.8;
@@ -13,7 +13,7 @@
     top: 5%;
     bottom: 0;
     left: 0;
-    right: 0;                
+    right: 0;     
   }
   
   /* Header */
@@ -76,6 +76,7 @@
   /* Cards */
   .card {
     display: inline-block;
+    opacity: 1;
     width: 200px;
     margin: 10px;
     text-align: center;
@@ -113,6 +114,7 @@
   /* General Styling */
   body {
     background: url(background.jpg);
+    background-size: cover;
     margin: 0;
     padding: 0;
     font-size: 14px;

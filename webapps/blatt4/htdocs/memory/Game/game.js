@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const seconds = Math.floor((gameTimeRemaining % 60000) / 1000);
 
     const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    timerElement.textContent = `Time Left: ${formattedTime}`;
+    timerElement.textContent = `Zeit verbleibend: ${formattedTime}`;
 
     // Checken ob der Timer ausgelaufen ist und der Winnerscreen nicht gezeigt wird
     if (currentTime >= endTime) {

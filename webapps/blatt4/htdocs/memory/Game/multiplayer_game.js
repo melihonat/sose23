@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         winnerScreen.style.display = 'block';
   
         let mainMenuButton = document.createElement('button');
-        mainMenuButton.innerText = 'Zurück zum Hauptmenü';
+        mainMenuButton.innerText = 'Zurueck zum Hauptmenü';
   
         mainMenuButton.addEventListener('click', () => {
           var url = '../Main Menu/main_menu.html';
